@@ -5,8 +5,9 @@
   <version>0.0.1-SNAPSHOT</version>
 
     <properties>
-        <spring.ver>4.2.2.RELEASE</spring.ver>
         <java.version>1.8</java.version>
+        <spring.ver>4.2.2.RELEASE</spring.ver>
+        <guava.ver>18.0</guava.ver>
     </properties>
 
     <dependencies>
@@ -29,6 +30,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
             <version>${spring.ver}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
         </dependency>
     </dependencies>
 
