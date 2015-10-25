@@ -13,10 +13,23 @@
 >
 
     <import resource="users.xml"/>
+    <import resource="auditoriums.xml"/>
 
     <context:annotation-config/>
     <context:component-scan base-package="com.epam.reshetnev.spring.core.dao.impl"/>
     <context:component-scan base-package="com.epam.reshetnev.spring.core.service.impl"/>
+
+    <bean id="dateTimeFormatter" class="java.time.format.DateTimeFormatter" factory-method="ofPattern">
+        <constructor-arg value="dd.MM.yyyy hh.mm.ss"/>
+    </bean>
+
+    <bean id="dateFormatter" class="java.time.format.DateTimeFormatter" factory-method="ofPattern">
+        <constructor-arg value="dd.MM.yyyy"/>
+    </bean>
+
+    <bean id="timeFormatter" class="java.time.format.DateTimeFormatter" factory-method="ofPattern">
+        <constructor-arg value="hh.mm.ss"/>
+    </bean>
 
     <bean id="app" class="com.epam.reshetnev.spring.core.App">
         <!--property name="defaultLogger" value="#{event.isDay() ? fileEventLogger : consoleEventLogger}"/-->

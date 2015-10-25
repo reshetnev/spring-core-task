@@ -7,11 +7,12 @@ import org.springframework.stereotype.Repository;
 import com.epam.reshetnev.spring.core.dao.TicketDao;
 import com.epam.reshetnev.spring.core.domain.Ticket;
 import com.epam.reshetnev.spring.core.util.Generator;
+import com.google.common.collect.Maps;
 
 @Repository
 public class TicketDaoImpl implements TicketDao {
 
-    private Map<String, Ticket> tickets;
+    private Map<String, Ticket> tickets = Maps.newHashMap();
 
     @Override
     public Ticket save(Ticket ticket) {

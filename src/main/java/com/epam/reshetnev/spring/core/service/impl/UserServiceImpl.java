@@ -1,7 +1,5 @@
 package com.epam.reshetnev.spring.core.service.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +7,6 @@ import com.epam.reshetnev.spring.core.dao.UserDao;
 import com.epam.reshetnev.spring.core.domain.Ticket;
 import com.epam.reshetnev.spring.core.domain.User;
 import com.epam.reshetnev.spring.core.service.UserService;
-import com.google.common.collect.Lists;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -23,19 +20,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Iterable<User> registerAll(Iterable<User> users) {
-        List<User> registeredUsers = Lists.newArrayList();
-        for (User user : users) {
-            registeredUsers.add(register(user));
-        }
-        return registeredUsers;
-
-    }
-
-    @Override
     public void remove(User user) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -47,7 +34,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void getUserByEmail(String email) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -61,4 +48,10 @@ public class UserServiceImpl implements UserService {
         // TODO Auto-generated method stub
         return null;
     }
+
+    @Override
+    public Iterable<User> getAllUsers() {
+        return userDao.getAllUsers();
+    }
+
 }

@@ -12,26 +12,8 @@
         http://www.springframework.org/schema/context/spring-context-4.2.xsd"
 >
 
-    <bean id="user1" class="com.epam.reshetnev.spring.core.domain.User">
-        <constructor-arg value="${kim1.name}"/>
-        <constructor-arg value="${kim1.email}"/>
-        <!--constructor-arg value="${kim1.birthDay}"/-->
+    <bean id="user" class="com.epam.reshetnev.spring.core.domain.User" scope="prototype">
+        <constructor-arg ref="dateFormatter"/>
     </bean>
-    <bean id="user2" class="com.epam.reshetnev.spring.core.domain.User">
-        <constructor-arg value="${kim2.name}"/>
-        <constructor-arg value="${kim2.email}"/>
-        <!--constructor-arg value="${kim2.birthDay}"/-->
-    </bean>
-    <bean id="user3" class="com.epam.reshetnev.spring.core.domain.User">
-        <constructor-arg value="${ivan.name}"/>
-        <constructor-arg value="${ivan.email}"/>
-        <!--constructor-arg value="${ivan.birthDay}"/-->
-    </bean>
-
-    <util:list id="userList">
-        <ref bean="user1"/>
-        <ref bean="user2"/>
-        <ref bean="user3"/>
-    </util:list>
 
 </beans>

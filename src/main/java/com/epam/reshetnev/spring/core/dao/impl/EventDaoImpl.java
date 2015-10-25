@@ -7,11 +7,12 @@ import org.springframework.stereotype.Repository;
 import com.epam.reshetnev.spring.core.dao.EventDao;
 import com.epam.reshetnev.spring.core.domain.Event;
 import com.epam.reshetnev.spring.core.util.Generator;
+import com.google.common.collect.Maps;
 
 @Repository
 public class EventDaoImpl implements EventDao {
 
-    private Map<String, Event> events;
+    private Map<String, Event> events = Maps.newHashMap();
     
     @Override
     public Event save(Event event) {

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util-4.2.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.2.xsd"
+>
+
+    <bean id="big" class="com.epam.reshetnev.spring.core.domain.Auditorium">
+        <constructor-arg value="${big.name}"/>
+        <constructor-arg value="${big.numberOfSeats}"/>
+        <constructor-arg value="${big.vipSeats}"/>
+    </bean>
+    <bean id="mid" class="com.epam.reshetnev.spring.core.domain.Auditorium">
+        <constructor-arg value="${mid.name}"/>
+        <constructor-arg value="${mid.numberOfSeats}"/>
+        <constructor-arg value="${mid.vipSeats}"/>
+    </bean>
+    <bean id="small" class="com.epam.reshetnev.spring.core.domain.Auditorium">
+        <constructor-arg value="${small.name}"/>
+        <constructor-arg value="${small.numberOfSeats}"/>
+        <constructor-arg value="${small.vipSeats}"/>
+    </bean>
+
+    <util:list id="auditoriumList">
+        <ref bean="big"/>
+        <ref bean="mid"/>
+        <ref bean="small"/>
+    </util:list>
+
+</beans>

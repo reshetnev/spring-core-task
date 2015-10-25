@@ -7,8 +7,6 @@ public interface UserService {
 
     public User register(User user);
 
-    public Iterable<User> registerAll(Iterable<User> users);
-
     public void remove(User user);
 
     public User getById(Integer id);
@@ -18,4 +16,6 @@ public interface UserService {
     public Iterable<User> getUsersByName(String name);
 
     public Iterable<Ticket> getBookedTickets(User user);
+    
+    public Iterable<User> getAllUsers();
 }
