@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util-4.2.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.2.xsd"
+>
+
+    <import resource="users.xml"/>
+
+    <context:annotation-config/>
+    <context:component-scan base-package="com.epam.reshetnev.spring.core.dao.impl"/>
+    <context:component-scan base-package="com.epam.reshetnev.spring.core.service.impl"/>
+
+    <bean id="app" class="com.epam.reshetnev.spring.core.App">
+        <!--property name="defaultLogger" value="#{event.isDay() ? fileEventLogger : consoleEventLogger}"/-->
+    </bean>
+
+    <!-- creates a java.util.Properties instance with values loaded from the supplied location -->
+    <util:properties id="usersProps" location="classpath:users.properties"/>
+    <util:properties id="auditoriumsProps" location="classpath:auditoriums.properties"/>
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:users.properties</value>
+                <value>classpath:auditoriums.properties</value>
+            </list>
+        </property>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <!-- Set SYSTEM_PROPERTIES_MODE_OVERRIDE -->
+        <property name="systemPropertiesMode" value="2"/>
+    </bean>
+
+</beans>

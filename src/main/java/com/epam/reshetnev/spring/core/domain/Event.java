@@ -15,7 +15,7 @@ public class Event {
 
     private Rating rating;
 
-    private Auditorium auditorium;
+    private String auditorium;
 
     public Integer getId() {
         return id;
@@ -57,11 +57,11 @@ public class Event {
         this.rating = rating;
     }
 
-    public Auditorium getAuditorium() {
+    public String getAuditorium() {
         return auditorium;
     }
 
-    public void setAuditorium(Auditorium auditorium) {
+    public void setAuditorium(String auditorium) {
         this.auditorium = auditorium;
     }
 

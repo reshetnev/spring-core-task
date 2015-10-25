@@ -1,6 +1,7 @@
 package com.epam.reshetnev.spring.core.domain;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 public class Ticket {
 
@@ -10,7 +11,7 @@ public class Ticket {
 
     private LocalDateTime airDateTime;
     
-    private Integer seat;
+    private Set<Integer> bookedSeats;
 
     private User user;
 
@@ -38,12 +39,12 @@ public class Ticket {
         this.airDateTime = airDateTime;
     }
 
-    public Integer getSeat() {
-        return seat;
+    public Set<Integer> getBookedSeats() {
+        return bookedSeats;
     }
 
-    public void setSeat(Integer seat) {
-        this.seat = seat;
+    public void setBookedSeats(Set<Integer> bookedSeats) {
+        this.bookedSeats = bookedSeats;
     }
 
     public User getUser() {
