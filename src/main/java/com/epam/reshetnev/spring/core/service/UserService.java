@@ -11,7 +11,7 @@ public interface UserService {
 
     public User getById(Integer id);
 
-    public void getUserByEmail(String email);
+    public User getUserByEmail(String email);
 
     public Iterable<User> getUsersByName(String name);
 

@@ -14,10 +14,12 @@
 
     <import resource="users.xml"/>
     <import resource="auditoriums.xml"/>
+    <import resource="discounts.xml"/>
 
     <context:annotation-config/>
     <context:component-scan base-package="com.epam.reshetnev.spring.core.dao.impl"/>
     <context:component-scan base-package="com.epam.reshetnev.spring.core.service.impl"/>
+    <context:component-scan base-package="com.epam.reshetnev.spring.core.discount.impl"/>
 
     <bean id="dateTimeFormatter" class="java.time.format.DateTimeFormatter" factory-method="ofPattern">
         <constructor-arg value="dd.MM.yyyy hh.mm.ss"/>
@@ -37,13 +39,13 @@
 
     <!-- creates a java.util.Properties instance with values loaded from the supplied location -->
     <util:properties id="usersProps" location="classpath:users.properties"/>
-    <util:properties id="auditoriumsProps" location="classpath:auditoriums.properties"/>
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
                 <value>classpath:users.properties</value>
                 <value>classpath:auditoriums.properties</value>
+                <value>classpath:discounts.properties</value>
             </list>
         </property>
         <property name="ignoreResourceNotFound" value="true"/>
