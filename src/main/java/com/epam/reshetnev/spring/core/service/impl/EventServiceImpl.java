@@ -45,8 +45,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Iterable<Event> getAll() {
-        return eventDao.getAllEvents();
+    public List<Event> getAll() {
+        return Lists.newArrayList(eventDao.getAllEvents());
     }
 
     @Override

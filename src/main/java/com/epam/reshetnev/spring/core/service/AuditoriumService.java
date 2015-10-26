@@ -1,12 +1,15 @@
 package com.epam.reshetnev.spring.core.service;
 
+import java.util.List;
+import java.util.Set;
+
 import com.epam.reshetnev.spring.core.domain.Auditorium;
 
 public interface AuditoriumService {
 
-    public Iterable<Auditorium> getAuditoriums();
+    public List<Auditorium> getAuditoriums();
 
     public Integer getSeatsNumber(Auditorium auditorium);
 
-    public Iterable<Integer> getVipSeats(Auditorium auditorium);
+    public List<Integer> getVipSeats(Auditorium auditorium);
 }

@@ -21,8 +21,12 @@
     <context:component-scan base-package="com.epam.reshetnev.spring.core.service.impl"/>
     <context:component-scan base-package="com.epam.reshetnev.spring.core.discount.impl"/>
 
+    <bean id="event" class="com.epam.reshetnev.spring.core.domain.Event" scope="prototype"/>
+
+    <bean id="ticket" class="com.epam.reshetnev.spring.core.domain.Ticket" scope="prototype"/>
+
     <bean id="dateTimeFormatter" class="java.time.format.DateTimeFormatter" factory-method="ofPattern">
-        <constructor-arg value="dd.MM.yyyy hh.mm.ss"/>
+        <constructor-arg value="dd.MM.yyyy HH.mm"/>
     </bean>
 
     <bean id="dateFormatter" class="java.time.format.DateTimeFormatter" factory-method="ofPattern">
@@ -30,7 +34,7 @@
     </bean>
 
     <bean id="timeFormatter" class="java.time.format.DateTimeFormatter" factory-method="ofPattern">
-        <constructor-arg value="hh.mm.ss"/>
+        <constructor-arg value="HH.mm"/>
     </bean>
 
     <bean id="app" class="com.epam.reshetnev.spring.core.App">

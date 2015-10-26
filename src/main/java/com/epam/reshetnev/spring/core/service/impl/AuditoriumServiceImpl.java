@@ -1,6 +1,7 @@
 package com.epam.reshetnev.spring.core.service.impl;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public class AuditoriumServiceImpl implements AuditoriumService {
     @Autowired
     private List<Auditorium> auditoriumList;
     
-    public Iterable<Auditorium> getAuditoriums() {
+    public List<Auditorium> getAuditoriums() {
         return auditoriumList;
     }
 
@@ -24,7 +25,7 @@ public class AuditoriumServiceImpl implements AuditoriumService {
     }
 
     @Override
-    public Iterable<Integer> getVipSeats(Auditorium auditorium) {
+    public List<Integer> getVipSeats(Auditorium auditorium) {
         return auditorium.getVipSeats();
     }
 }

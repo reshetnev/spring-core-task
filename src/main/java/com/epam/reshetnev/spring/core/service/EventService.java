@@ -16,7 +16,7 @@ public interface EventService {
 
     public Event getByName(String name);
 
-    public Iterable<Event> getAll();
+    public List<Event> getAll();
 
     public Optional<List<Event>> getForDateRange(LocalDate from, LocalDate to);
 

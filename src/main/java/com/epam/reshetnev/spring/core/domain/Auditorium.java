@@ -2,10 +2,9 @@ package com.epam.reshetnev.spring.core.domain;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 
 public class Auditorium {
 
@@ -13,7 +12,7 @@ public class Auditorium {
 
     private Integer numberOfSeats;
 
-    private Set<Integer> vipSeats = Sets.newLinkedHashSet();
+    private List<Integer> vipSeats = Lists.newArrayList();
 
     public Auditorium(String name, Integer numberOfSeats, String vipSeats) {
         this.name = name;
@@ -32,7 +31,7 @@ public class Auditorium {
         return numberOfSeats;
     }
 
-    public Set<Integer> getVipSeats() {
+    public List<Integer> getVipSeats() {
         return vipSeats;
     }
 
