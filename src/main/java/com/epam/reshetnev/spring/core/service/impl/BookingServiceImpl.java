@@ -65,7 +65,7 @@ public class BookingServiceImpl implements BookingService {
         if (!ticket.getIsPurchased()) {
             ticket.setIsPurchased(true);
             if (user.getId() != null) {
-                user.getBookedTickets().add(ticket);
+                ticket.setUser(user);
             }
         } else {
             log.info("Ticket is sold");

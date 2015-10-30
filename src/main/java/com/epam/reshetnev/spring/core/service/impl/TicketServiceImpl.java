@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.epam.reshetnev.spring.core.dao.TicketDao;
+import com.epam.reshetnev.spring.core.domain.Event;
 import com.epam.reshetnev.spring.core.domain.Ticket;
 import com.epam.reshetnev.spring.core.service.TicketService;
 import com.google.common.collect.Sets;
@@ -28,11 +29,11 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public Ticket getBySeat(Integer seat) {
+    public Ticket getByEvent(Event event) {
         Set<Ticket> tickets = Sets.newHashSet(getAllTickets());
         Optional<Ticket> ticket = tickets
                 .stream()
-                .filter(t -> (t.getSeat().equals(seat)))
+                .filter(t -> (t.getEvent().equals(event)))
                 .findFirst();
         return ticket.get();
     }
