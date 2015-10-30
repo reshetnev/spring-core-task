@@ -1,11 +1,7 @@
 package com.epam.reshetnev.spring.core.domain;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 public class Event {
 
@@ -21,9 +17,7 @@ public class Event {
 
     private Auditorium auditorium;
 
-    private Set<Ticket> tickets = Sets.newHashSet();
-
-    private List<Ticket> purchasedTickets = Lists.newArrayList();
+    private Set<Ticket> tickets;
 
     public Integer getId() {
         return id;
@@ -81,19 +75,10 @@ public class Event {
         this.tickets = tickets;
     }
 
-    public List<Ticket> getPurchasedTickets() {
-        return purchasedTickets;
-    }
-
-    public void setPurchasedTickets(List<Ticket> purchasedTickets) {
-        this.purchasedTickets = purchasedTickets;
-    }
-
     @Override
     public String toString() {
         return "Event [id=" + id + ", name=" + name + ", airDateTime=" + airDateTime + ", basePrice=" + basePrice
-                + ", rating=" + rating + ", auditorium=" + auditorium + ", tickets=" + tickets + ", purchasedTickets="
-                + purchasedTickets + "]";
+                + ", rating=" + rating + ", auditorium=" + auditorium + ", tickets=" + tickets + "]";
     }
 
     @Override
@@ -105,7 +90,6 @@ public class Event {
         result = prime * result + ((basePrice == null) ? 0 : basePrice.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((purchasedTickets == null) ? 0 : purchasedTickets.hashCode());
         result = prime * result + ((rating == null) ? 0 : rating.hashCode());
         result = prime * result + ((tickets == null) ? 0 : tickets.hashCode());
         return result;
@@ -144,11 +128,6 @@ public class Event {
             if (other.name != null)
                 return false;
         } else if (!name.equals(other.name))
-            return false;
-        if (purchasedTickets == null) {
-            if (other.purchasedTickets != null)
-                return false;
-        } else if (!purchasedTickets.equals(other.purchasedTickets))
             return false;
         if (rating != other.rating)
             return false;

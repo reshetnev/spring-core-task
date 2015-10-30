@@ -18,7 +18,8 @@ public class BirthDayStrategy implements DiscountStrategy {
 
         Double discount = 0d;
 
-        if (user.getBirthDay().equals(airDate)) {
+        if ((user.getBirthDay().getDayOfMonth() == (airDate.getDayOfMonth())) &&
+                (user.getBirthDay().getMonthValue() == airDate.getMonthValue())) {
             discount = event.getBasePrice()*birthDayDiscount/100;
         }
 

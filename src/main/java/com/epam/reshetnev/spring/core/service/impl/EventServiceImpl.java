@@ -3,7 +3,6 @@ package com.epam.reshetnev.spring.core.service.impl;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,18 +49,17 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Optional<List<Event>> getForDateRange(LocalDate from, LocalDate to) {
+    public List<Event> getForDateRange(LocalDate from, LocalDate to) {
         List<Event> events = Lists.newArrayList(getAll())
                 .stream()
                 .filter(e -> (e.getAirDateTime().toLocalDate().compareTo(from) >= 0) &&
                     (e.getAirDateTime().toLocalDate().compareTo(to) <= 0))
                 .collect(Collectors.toList());
-        Optional<List<Event>> eventsOpt = Optional.of(events);
-        return eventsOpt;
+        return events;
     }
 
     @Override
-    public Optional<List<Event>> getNextEvents(LocalDate to) {
+    public List<Event> getNextEvents(LocalDate to) {
         return getForDateRange(LocalDate.now(), to);
     }
 

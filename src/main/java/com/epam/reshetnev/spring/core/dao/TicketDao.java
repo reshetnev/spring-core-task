@@ -9,6 +9,6 @@ public interface TicketDao {
     public void delete(Ticket ticket);
 
     public Ticket getTicketById(Integer id);
-    
+
     public Iterable<Ticket> getAllTickets();
 }

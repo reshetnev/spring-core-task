@@ -1,23 +1,23 @@
 package com.epam.reshetnev.spring.core.dao.impl;
 
-import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.stereotype.Repository;
 
 import com.epam.reshetnev.spring.core.dao.EventDao;
 import com.epam.reshetnev.spring.core.domain.Event;
-import com.epam.reshetnev.spring.core.util.Generator;
-import com.google.common.collect.Maps;
 
 @Repository
 public class EventDaoImpl implements EventDao {
 
-    private Map<String, Event> events = Maps.newHashMap();
+    private ConcurrentMap<String, Event> events = new ConcurrentHashMap<String, Event>();
     
     @Override
     public Event save(Event event) {
         while (true) {
-            Integer id = Generator.generateId();
+            Integer id = generateId();
             event.setId(id);
             if (events.putIfAbsent(id.toString(), event) == null) {
                 break;
@@ -43,4 +43,8 @@ public class EventDaoImpl implements EventDao {
         return events.values();
     }
 
+    public static Integer generateId() {
+        Random r = new Random();
+        return r.ints(1, Integer.MAX_VALUE).limit(1).findFirst().getAsInt();
+    }
 }

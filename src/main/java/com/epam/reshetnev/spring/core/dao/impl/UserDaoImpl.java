@@ -1,23 +1,23 @@
 package com.epam.reshetnev.spring.core.dao.impl;
 
-import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.stereotype.Repository;
 
 import com.epam.reshetnev.spring.core.dao.UserDao;
 import com.epam.reshetnev.spring.core.domain.User;
-import com.epam.reshetnev.spring.core.util.Generator;
-import com.google.common.collect.Maps;
 
 @Repository
 public class UserDaoImpl implements UserDao {
 
-    private Map<String, User> users = Maps.newHashMap();
+    private ConcurrentMap<String, User> users = new ConcurrentHashMap<String, User>();
 
     @Override
     public User save(User user) {
         while (true) {
-            Integer id = Generator.generateId();
+            Integer id = generateId();
             user.setId(id);
             if (users.putIfAbsent(id.toString(), user) == null) {
                 break;
@@ -48,4 +48,8 @@ public class UserDaoImpl implements UserDao {
 //        return users.put(user.getId().toString(), user);
 //    }
 
+    public static Integer generateId() {
+        Random r = new Random();
+        return r.ints(1, Integer.MAX_VALUE).limit(1).findFirst().getAsInt();
+    }
 }

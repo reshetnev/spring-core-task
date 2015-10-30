@@ -37,9 +37,7 @@
         <constructor-arg value="HH.mm"/>
     </bean>
 
-    <bean id="app" class="com.epam.reshetnev.spring.core.App">
-        <!--property name="defaultLogger" value="#{event.isDay() ? fileEventLogger : consoleEventLogger}"/-->
-    </bean>
+    <bean id="app" class="com.epam.reshetnev.spring.core.App"/>
 
     <!-- creates a java.util.Properties instance with values loaded from the supplied location -->
     <util:properties id="usersProps" location="classpath:users.properties"/>

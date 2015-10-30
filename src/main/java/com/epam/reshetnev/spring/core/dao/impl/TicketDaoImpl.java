@@ -1,23 +1,23 @@
 package com.epam.reshetnev.spring.core.dao.impl;
 
-import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.stereotype.Repository;
 
 import com.epam.reshetnev.spring.core.dao.TicketDao;
 import com.epam.reshetnev.spring.core.domain.Ticket;
-import com.epam.reshetnev.spring.core.util.Generator;
-import com.google.common.collect.Maps;
 
 @Repository
 public class TicketDaoImpl implements TicketDao {
 
-    private Map<String, Ticket> tickets = Maps.newHashMap();
+    private ConcurrentMap<String, Ticket> tickets = new ConcurrentHashMap<String, Ticket>();
 
     @Override
     public Ticket save(Ticket ticket) {
         while (true) {
-            Integer id = Generator.generateId();
+            Integer id = generateId();
             ticket.setId(id);
             if (tickets.putIfAbsent(id.toString(), ticket) == null) {
                 break;
@@ -44,4 +44,8 @@ public class TicketDaoImpl implements TicketDao {
         return tickets.values();
     }
 
+    public static Integer generateId() {
+        Random r = new Random();
+        return r.ints(1, Integer.MAX_VALUE).limit(1).findFirst().getAsInt();
+    }
 }
