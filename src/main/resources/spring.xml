@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
     xmlns:util="http://www.springframework.org/schema/util"
     xmlns:context="http://www.springframework.org/schema/context"
     xsi:schemaLocation="
@@ -9,7 +10,9 @@
         http://www.springframework.org/schema/util
         http://www.springframework.org/schema/util/spring-util-4.2.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-4.2.xsd"
+        http://www.springframework.org/schema/context/spring-context-4.2.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.2.xsd"
 >
 
     <import resource="users.xml"/>
@@ -20,6 +23,11 @@
     <context:component-scan base-package="com.epam.reshetnev.spring.core.dao.impl"/>
     <context:component-scan base-package="com.epam.reshetnev.spring.core.service.impl"/>
     <context:component-scan base-package="com.epam.reshetnev.spring.core.discount.impl"/>
+
+    <aop:aspectj-autoproxy />
+
+    <bean id="counterAspect" class="com.epam.reshetnev.spring.core.aspect.CounterAspect"/>
+    <bean id="discountAspect" class="com.epam.reshetnev.spring.core.aspect.DiscountAspect"/>
 
     <bean id="event" class="com.epam.reshetnev.spring.core.domain.Event" scope="prototype"/>
 

@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.epam.reshetnev.spring.core.aspect.CounterAspect;
+import com.epam.reshetnev.spring.core.aspect.DiscountAspect;
 import com.epam.reshetnev.spring.core.domain.Auditorium;
 import com.epam.reshetnev.spring.core.domain.Event;
 import com.epam.reshetnev.spring.core.domain.Rating;
@@ -61,23 +63,36 @@ public class App {
 
     public static void main(String[] args) {
 
-        List<Integer> seats = Lists.newArrayList(2,3,4,5,6,7,8,9,10,11);
-
         ConfigurableApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
         App app = (App) ctx.getBean("app");
         app.initUsers(ctx);
-        app.initEvent(ctx);
-        app.initTicket(ctx, seats);
+        app.initEvents(ctx);
+        CounterAspect counterAspect = ctx.getBean(CounterAspect.class);
+        DiscountAspect discountAspect = ctx.getBean(DiscountAspect.class);
 
-        Event event = app.getEventByName("MINIONS");
+        List<Integer> seatsForUser1 = Lists.newArrayList(2,3,4,5,6,7,8,9,10,11);
+        List<Integer> seatsForUser2 = Lists.newArrayList(5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27);
+        List<Integer> seatsForUser4 = Lists.newArrayList(1,2,30,31);
+        
+        Event event1 = app.getEventByName("MINIONS");
+        app.initTickets(ctx, event1, seatsForUser1);
+
+        Event event2 = app.getEventByName("007 Spectr");
+        app.initTickets(ctx, event2, seatsForUser2);
+        app.initTickets(ctx, event2, seatsForUser4);
 
         User user1 = app.getUserByEmail("kim1@gmail.com");
+        User user2 = app.getUserByEmail("kim2@gmail.com");
+        User user3 = app.getUserByEmail("iivanov@gmail.com");
+        User user4 = ctx.getBean(User.class);
 
-        List<Ticket> tickets = app.getTicketsBySeats(seats);
-
-        app.setEventToTickets(event, tickets);
-
-        app.bookTickets(user1, tickets);
+        List<Ticket> tickets1 = app.getTicketsByEventAndSeats(event1, seatsForUser1);
+        List<Ticket> tickets2 = app.getTicketsByEventAndSeats(event2, seatsForUser2);
+        List<Ticket> tickets4 = app.getTicketsByEventAndSeats(event2, seatsForUser4);
+        
+        app.bookTickets(user1, tickets1);
+        app.bookTickets(user2, tickets2);
+        app.bookTickets(user4, tickets4);
 
         app.printAllAuditoriums();
 
@@ -87,24 +102,30 @@ public class App {
 
         app.printAllTickets();
 
-        app.printTicketPrices(event, user1, seats);
+        app.printTicketPrices(event1, user1, seatsForUser1);
+        app.printTicketPrices(event2, user2, seatsForUser2);
+        app.printTicketPrices(event2, user4, seatsForUser4);
+
+        app.printCounterAspect(counterAspect);
+        app.printDiscountAspect(discountAspect);
 
         ctx.close();
     }
 
-    private void setEventToTickets(Event event, List<Ticket> tickets) {
-        for (Ticket ticket :tickets) {
-            setEventToTicket(event, ticket);
-        }
+    private void printDiscountAspect(DiscountAspect discountAspect) {
+        log.info("Total discounts: " + discountAspect.getCounter().toString());
+        log.info("BirthDay Discount: " + discountAspect.getCounterBirthDayGetDiscountForUser().toString());
+        log.info("EveryTenGetDiscount: " + discountAspect.getCounterEveryTenGetDiscountForUser().toString());
     }
 
-    private List<Ticket> getTicketsBySeats(List<Integer> seats) {
-        List<Ticket> tickets = Lists.newArrayList();
-        for (Integer seat : seats) {
-            Ticket ticket = getTicketBySeat(seat);
-            tickets.add(ticket);
-        }
-        return tickets;
+    private void printCounterAspect(CounterAspect counterAspect) {
+        log.info("Event was get by name: "+ counterAspect.getCounterGetEventByName().toString());
+        log.info("Prices of Event were queried: "+ counterAspect.getCounterGetTicketPrices().toString());
+        log.info("Tickets were booked: "+ counterAspect.getCounterBookTicket().toString());
+    }
+
+    private List<Ticket> getTicketsByEventAndSeats(Event event, List<Integer> seats) {
+        return ticketService.getByEvent(event, seats);
     }
 
     private void printTicketPrices(Event event, User user, List<Integer> seats) {
@@ -129,17 +150,13 @@ public class App {
         ticketService.getAllTickets().forEach(t -> log.info(t.toString()));
     }
 
-    private void setEventToTicket(Event event, Ticket ticket) {
-        ticket.setEvent(event);
-    }
-
     private void bookTicket(User user, Ticket ticket) {
         bookingService.bookTicket(user, ticket);
     }
 
     private void bookTickets(User user, List<Ticket> tickets) {
         for (Ticket ticket : tickets) {
-            bookingService.bookTicket(user, ticket);
+            bookTicket(user, ticket);
         }
     }
 
@@ -149,10 +166,6 @@ public class App {
 
     private Event getEventByName(String name) {
         return eventService.getByName(name);
-    }
-
-    private Ticket getTicketBySeat(Integer seat) {
-        return ticketService.getBySeat(seat);
     }
 
     private Auditorium getAuditoriumByName(String name) {
@@ -188,24 +201,13 @@ public class App {
         return user;
     }
 
-    private Ticket createTicket(ConfigurableApplicationContext ctx, Integer seat) {
+    private Ticket createTicket(ConfigurableApplicationContext ctx, Event event, Integer seat) {
         Ticket ticket= ctx.getBean(Ticket.class);
 
+        ticket.setEvent(event);
         ticket.setSeat(seat);
 
         return ticket;
-    }
-
-    private List<Ticket> createTicketList(ConfigurableApplicationContext ctx, List<Integer> seats) {
-        List<Ticket> tickets = Lists.newArrayList();
-        for (Integer seat : seats) {
-            Ticket ticket= ctx.getBean(Ticket.class);
-
-            ticket.setSeat(seat);
-            tickets.add(ticket);
-        }
-
-        return tickets;
     }
 
     private void initUsers(ConfigurableApplicationContext ctx) {
@@ -222,20 +224,22 @@ public class App {
         registerUser(user3);
     }
 
-    private void initEvent(ConfigurableApplicationContext ctx) {
-        Event event = createEvent(ctx, "MINIONS", "25.10.2015 15.00", 100d, Rating.HIGH,
+    private void initEvents(ConfigurableApplicationContext ctx) {
+        Event event1 = createEvent(ctx, "MINIONS", "25.10.2015 15.00", 200d, Rating.HIGH,
                 getAuditoriumByName("Big"));
-        eventService.create(event);
+        eventService.create(event1);
+
+        Event event2 = createEvent(ctx, "007 Spectr", "30.10.2015 21.00", 100d, Rating.MID,
+                getAuditoriumByName("Mid"));
+        eventService.create(event2);
     }
 
-    private void initTicket(ConfigurableApplicationContext ctx, List<Integer> seats) {
-
-        List<Ticket> tickets = createTicketList(ctx, seats);
-
-        for (Ticket ticket : tickets) {
+    private void initTickets(ConfigurableApplicationContext ctx, Event event, List<Integer> seats) {
+        for (Integer seat : seats) {
+            Ticket ticket = createTicket(ctx, event, seat);
             ticketService.register(ticket);
+//            event.getTickets().add(ticket);
         }
-
     }
 
 }
