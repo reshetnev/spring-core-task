@@ -54,7 +54,9 @@ public class Ticket {
 
     @Override
     public String toString() {
-        return "Ticket [id=" + id + ", event=" + event + ", user=" + user + ", seat=" + seat + ", isPurchased="
+        String userEmail = ((user.getId() != null) && (user.getEmail() != null)) ? user.getEmail() : "User was not registered.";
+
+        return "Ticket [id=" + id + ", event=" + event.getName() + ", user=" + userEmail + ", seat=" + seat + ", isPurchased="
                 + isPurchased + "]";
     }
 

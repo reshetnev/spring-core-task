@@ -3,6 +3,7 @@ package com.epam.reshetnev.spring.core.domain;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.Sets;
 
@@ -74,8 +75,9 @@ public class User {
 
     @Override
     public String toString() {
-        return "User [id=" + id + ", name=" + name + ", email=" + email + ", birthDay=" + birthDay.format(dateFormatter) + ", bookedTickets="
-                + bookedTickets + "]";
+        return "User [id=" + id + ", name=" + name + ", email=" + email + ", birthDay=" + birthDay.format(dateFormatter)
+//                + ", bookedTickets=" + bookedTickets.stream().map(t -> t.getSeat()).collect(Collectors.toList())
+                + "]";
     }
 
     @Override

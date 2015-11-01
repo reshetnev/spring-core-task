@@ -44,10 +44,7 @@
         <constructor-arg value="HH.mm"/>
     </bean>
 
-    <bean id="app" class="com.epam.reshetnev.spring.core.App">
-        <property name="seats1" ref="seats1"/>
-        <property name="seats2" ref="seats2"/>
-    </bean>
+    <bean id="app" class="com.epam.reshetnev.spring.core.App"/>
 
     <!-- creates a java.util.Properties instance with values loaded from the supplied location -->
     <util:properties id="usersProps" location="classpath:users.properties"/>

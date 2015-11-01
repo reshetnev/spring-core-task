@@ -1,5 +1,7 @@
 package com.epam.reshetnev.spring.core.service;
 
+import java.util.List;
+
 import com.epam.reshetnev.spring.core.domain.Event;
 import com.epam.reshetnev.spring.core.domain.Ticket;
 
@@ -9,6 +11,6 @@ public interface TicketService {
 
     public Iterable<Ticket> getAllTickets();
 
-    public Ticket getByEvent(Event event);
+    public List<Ticket> getByEvent(Event event, List<Integer> seats);
 
 }

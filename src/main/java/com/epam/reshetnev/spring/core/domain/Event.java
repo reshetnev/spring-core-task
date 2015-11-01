@@ -2,6 +2,9 @@ package com.epam.reshetnev.spring.core.domain;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.google.common.collect.Sets;
 
 public class Event {
 
@@ -17,7 +20,7 @@ public class Event {
 
     private Auditorium auditorium;
 
-    private Set<Ticket> tickets;
+    private Set<Ticket> tickets = Sets.newHashSet();
 
     public Integer getId() {
         return id;
@@ -78,7 +81,9 @@ public class Event {
     @Override
     public String toString() {
         return "Event [id=" + id + ", name=" + name + ", airDateTime=" + airDateTime + ", basePrice=" + basePrice
-                + ", rating=" + rating + ", auditorium=" + auditorium + ", tickets=" + tickets + "]";
+                + ", rating=" + rating + ", auditorium=" + auditorium
+//                + ", tickets=" + tickets.stream().map(t -> t.getSeat()).collect(Collectors.toList());
+                + "]";
     }
 
     @Override
