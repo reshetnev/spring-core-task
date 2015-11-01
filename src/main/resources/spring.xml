@@ -27,6 +27,7 @@
     <aop:aspectj-autoproxy />
 
     <bean id="counterAspect" class="com.epam.reshetnev.spring.core.aspect.CounterAspect"/>
+    <bean id="discountAspect" class="com.epam.reshetnev.spring.core.aspect.DiscountAspect"/>
 
     <bean id="event" class="com.epam.reshetnev.spring.core.domain.Event" scope="prototype"/>
 

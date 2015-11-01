@@ -3,7 +3,6 @@ package com.epam.reshetnev.spring.core.domain;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.google.common.collect.Sets;
 

@@ -13,6 +13,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.epam.reshetnev.spring.core.aspect.CounterAspect;
+import com.epam.reshetnev.spring.core.aspect.DiscountAspect;
 import com.epam.reshetnev.spring.core.domain.Auditorium;
 import com.epam.reshetnev.spring.core.domain.Event;
 import com.epam.reshetnev.spring.core.domain.Rating;
@@ -67,9 +68,10 @@ public class App {
         app.initUsers(ctx);
         app.initEvents(ctx);
         CounterAspect counterAspect = ctx.getBean(CounterAspect.class);
+        DiscountAspect discountAspect = ctx.getBean(DiscountAspect.class);
 
         List<Integer> seatsForUser1 = Lists.newArrayList(2,3,4,5,6,7,8,9,10,11);
-        List<Integer> seatsForUser2 = Lists.newArrayList(5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21);
+        List<Integer> seatsForUser2 = Lists.newArrayList(5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27);
         List<Integer> seatsForUser4 = Lists.newArrayList(1,2,30,31);
         
         Event event1 = app.getEventByName("MINIONS");
@@ -105,8 +107,15 @@ public class App {
         app.printTicketPrices(event2, user4, seatsForUser4);
 
         app.printCounterAspect(counterAspect);
+        app.printDiscountAspect(discountAspect);
 
         ctx.close();
+    }
+
+    private void printDiscountAspect(DiscountAspect discountAspect) {
+        log.info("Total discounts: " + discountAspect.getCounter().toString());
+        log.info("BirthDay Discount: " + discountAspect.getCounterBirthDayGetDiscountForUser().toString());
+        log.info("EveryTenGetDiscount: " + discountAspect.getCounterEveryTenGetDiscountForUser().toString());
     }
 
     private void printCounterAspect(CounterAspect counterAspect) {

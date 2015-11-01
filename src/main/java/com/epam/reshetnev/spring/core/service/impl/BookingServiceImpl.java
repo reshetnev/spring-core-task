@@ -25,34 +25,30 @@ public class BookingServiceImpl implements BookingService {
     @Value("${vip.increase}")
     private Double vipIncrease;
 
-    @Value("${every.ten.discount}")
-    private Double everyTenDiscount;
-
     @Autowired
     private DiscountService discountService;
 
     @Override
     public List<Double> getTicketPrices(Event event, LocalDateTime airDateTime, List<Integer> seats, User user) {
 
-        int count = 0;
-
         List<Double> prices = Lists.newArrayList();
-        for (Integer seat : seats) {
-            
+
+        for (int i = 0; i < seats.size(); i++) {
+
             Double price = event.getBasePrice();
+
+            Integer seat = seats.get(i);
 
             if (event.getAuditorium().getVipSeats().contains(seat)) {
                 price += event.getBasePrice()*vipIncrease/100;
             }
 
+            Integer ordinalNumberTicket = i+1;
+            
+            discountService.checkDiscounts(user, event, airDateTime.toLocalDate(), ordinalNumberTicket);
+
             price -= discountService.getDiscount(user, event, airDateTime.toLocalDate());
-            count++;
-            if (count < 10 ) {
-                price += event.getBasePrice()*everyTenDiscount/100;
-            }
-            if (count == 10) {
-                count = 0;
-            }
+
             prices.add(price);
         }
 
@@ -76,7 +72,10 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Set<Ticket> getTicketsForEvent(Event event, LocalDateTime airDateTime) {
-        Set<Ticket> tickets = event.getTickets().stream().filter(ticket -> (ticket.getIsPurchased())).collect(Collectors.toSet());
+        Set<Ticket> tickets = event.getTickets()
+                .stream()
+                .filter(ticket -> (ticket.getIsPurchased()))
+                .collect(Collectors.toSet());
         return tickets;
     }
 

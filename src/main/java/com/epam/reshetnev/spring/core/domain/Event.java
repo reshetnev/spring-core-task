@@ -2,7 +2,6 @@ package com.epam.reshetnev.spring.core.domain;
 
 import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.google.common.collect.Sets;
 
