@@ -8,6 +8,8 @@
         <java.version>1.8</java.version>
         <spring.ver>4.2.2.RELEASE</spring.ver>
         <guava.ver>18.0</guava.ver>
+        <log4j.version>1.2.17</log4j.version>
+        <aspectj.version>1.8.7</aspectj.version>
     </properties>
 
     <dependencies>
@@ -34,12 +36,17 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>18.0</version>
+            <version>${guava.ver}</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
         </dependency>
     </dependencies>
 

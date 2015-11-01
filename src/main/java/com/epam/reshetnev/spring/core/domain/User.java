@@ -74,8 +74,9 @@ public class User {
 
     @Override
     public String toString() {
-        return "User [id=" + id + ", name=" + name + ", email=" + email + ", birthDay=" + birthDay.format(dateFormatter) + ", bookedTickets="
-                + bookedTickets + "]";
+        return "User [id=" + id + ", name=" + name + ", email=" + email + ", birthDay=" + birthDay.format(dateFormatter)
+//                + ", bookedTickets=" + bookedTickets.stream().map(t -> t.getSeat()).collect(Collectors.toList())
+                + "]";
     }
 
     @Override
