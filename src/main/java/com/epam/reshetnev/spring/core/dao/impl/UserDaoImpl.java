@@ -4,6 +4,8 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.epam.reshetnev.spring.core.dao.UserDao;
@@ -11,6 +13,9 @@ import com.epam.reshetnev.spring.core.domain.User;
 
 @Repository
 public class UserDaoImpl implements UserDao {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private ConcurrentMap<String, User> users = new ConcurrentHashMap<String, User>();
 
