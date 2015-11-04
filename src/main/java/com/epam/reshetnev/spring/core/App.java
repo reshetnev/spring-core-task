@@ -109,7 +109,7 @@ public class App {
         app.printCounterAspect(counterAspect);
         app.printDiscountAspect(discountAspect);
 
-        ctx.close();
+//        ctx.close();
     }
 
     private void printDiscountAspect(DiscountAspect discountAspect) {
