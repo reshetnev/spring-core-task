@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -15,12 +16,15 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.epam.reshetnev.spring.core.aspect.CounterAspect;
 import com.epam.reshetnev.spring.core.aspect.DiscountAspect;
 import com.epam.reshetnev.spring.core.domain.Auditorium;
+import com.epam.reshetnev.spring.core.domain.Counter;
 import com.epam.reshetnev.spring.core.domain.Event;
-import com.epam.reshetnev.spring.core.domain.Rating;
 import com.epam.reshetnev.spring.core.domain.Ticket;
 import com.epam.reshetnev.spring.core.domain.User;
+import com.epam.reshetnev.spring.core.domain.enums.CounterType;
+import com.epam.reshetnev.spring.core.domain.enums.Rating;
 import com.epam.reshetnev.spring.core.service.AuditoriumService;
 import com.epam.reshetnev.spring.core.service.BookingService;
+import com.epam.reshetnev.spring.core.service.CounterService;
 import com.epam.reshetnev.spring.core.service.EventService;
 import com.epam.reshetnev.spring.core.service.TicketService;
 import com.epam.reshetnev.spring.core.service.UserService;
@@ -61,6 +65,9 @@ public class App {
     @Autowired
     private TicketService ticketService;
 
+    @Autowired
+    private CounterService counterService;
+
     public static void main(String[] args) {
 
         ConfigurableApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
@@ -72,8 +79,9 @@ public class App {
 
         List<Integer> seatsForUser1 = Lists.newArrayList(2,3,4,5,6,7,8,9,10,11);
         List<Integer> seatsForUser2 = Lists.newArrayList(5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27);
-        List<Integer> seatsForUser4 = Lists.newArrayList(1,2,30,31);
-        
+
+        List<Integer> seatsForUser4 = Lists.newArrayList(1,2,30,31); //check in DB
+
         Event event1 = app.getEventByName("MINIONS");
         app.initTickets(ctx, event1, seatsForUser1);
 
@@ -89,7 +97,7 @@ public class App {
         List<Ticket> tickets1 = app.getTicketsByEventAndSeats(event1, seatsForUser1);
         List<Ticket> tickets2 = app.getTicketsByEventAndSeats(event2, seatsForUser2);
         List<Ticket> tickets4 = app.getTicketsByEventAndSeats(event2, seatsForUser4);
-        
+
         app.bookTickets(user1, tickets1);
         app.bookTickets(user2, tickets2);
         app.bookTickets(user4, tickets4);
@@ -113,15 +121,54 @@ public class App {
     }
 
     private void printDiscountAspect(DiscountAspect discountAspect) {
-        log.info("Total discounts: " + discountAspect.getCounter().toString());
-        log.info("BirthDay Discount: " + discountAspect.getCounterBirthDayGetDiscountForUser().toString());
-        log.info("EveryTenGetDiscount: " + discountAspect.getCounterEveryTenGetDiscountForUser().toString());
+
+        Map<String, Integer> counterTotal = discountAspect.getCounter();
+
+        Map<String, Integer> counterBirthDayGetDiscountForUser = discountAspect.getCounterBirthDayGetDiscountForUser();
+
+        Map<String, Integer> counterEveryTenGetDiscountForUser = discountAspect.getCounterEveryTenGetDiscountForUser();
+
+        log.info("Total discounts: " + counterTotal.toString());
+        log.info("BirthDay Discount: " + counterBirthDayGetDiscountForUser.toString());
+        log.info("EveryTenGetDiscount: " + counterEveryTenGetDiscountForUser.toString());
+
+        for (String key : counterTotal.keySet()) {
+            counterService.insert(new Counter(CounterType.DISCOUNT_TOTAL, key, counterTotal.get(key)));
+        }
+
+        for (String key : counterBirthDayGetDiscountForUser.keySet()) {
+            counterService.insert(new Counter(CounterType.DISCOUNT_BIRTH_DAY, key, counterBirthDayGetDiscountForUser.get(key)));
+        }
+
+        for (String key : counterEveryTenGetDiscountForUser.keySet()) {
+            counterService.insert(new Counter(CounterType.DISCOUNT_EVERY_TEN, key, counterEveryTenGetDiscountForUser.get(key)));
+        }
     }
 
     private void printCounterAspect(CounterAspect counterAspect) {
-        log.info("Event was get by name: "+ counterAspect.getCounterGetEventByName().toString());
-        log.info("Prices of Event were queried: "+ counterAspect.getCounterGetTicketPrices().toString());
-        log.info("Tickets were booked: "+ counterAspect.getCounterBookTicket().toString());
+
+        Map<String, Integer> counterGetEventByName = counterAspect.getCounterGetEventByName();
+
+        Map<String, Integer> counterGetTicketPrices = counterAspect.getCounterGetTicketPrices();
+
+        Map<String, Integer> counterBookTicket = counterAspect.getCounterBookTicket();
+
+        log.info("Event was get by name: "+ counterGetEventByName.toString());
+        log.info("Prices of Event were queried: "+ counterGetTicketPrices.toString());
+        log.info("Tickets were booked: "+ counterBookTicket.toString());
+
+        for (String key : counterGetEventByName.keySet()) {
+            counterService.insert(new Counter(CounterType.GET_EVENT_BY_NAME, key, counterGetEventByName.get(key)));
+        }
+
+        for (String key : counterGetTicketPrices.keySet()) {
+            counterService.insert(new Counter(CounterType.GET_TICKET_PRICES, key, counterGetTicketPrices.get(key)));
+        }
+
+        for (String key : counterBookTicket.keySet()) {
+            counterService.insert(new Counter(CounterType.BOOK_TICKET, key, counterBookTicket.get(key)));
+        }
+
     }
 
     private List<Ticket> getTicketsByEventAndSeats(Event event, List<Integer> seats) {
@@ -225,11 +272,11 @@ public class App {
     }
 
     private void initEvents(ConfigurableApplicationContext ctx) {
-        Event event1 = createEvent(ctx, "MINIONS", "25.10.2015 15.00", 200d, Rating.HIGH,
+        Event event1 = createEvent(ctx, "MINIONS", "2015-10-25 15:00:00", 200d, Rating.HIGH,
                 getAuditoriumByName("Big"));
         eventService.create(event1);
 
-        Event event2 = createEvent(ctx, "007 Spectr", "30.10.2015 21.00", 100d, Rating.MID,
+        Event event2 = createEvent(ctx, "007 Spectr", "2015-10-30 21:00:00", 100d, Rating.MID,
                 getAuditoriumByName("Mid"));
         eventService.create(event2);
     }

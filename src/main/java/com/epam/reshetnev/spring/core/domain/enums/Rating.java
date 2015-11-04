@@ -1,4 +1,4 @@
-package com.epam.reshetnev.spring.core.domain;
+package com.epam.reshetnev.spring.core.domain.enums;
 
 public enum Rating {
     

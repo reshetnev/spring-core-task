@@ -4,6 +4,8 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.epam.reshetnev.spring.core.dao.EventDao;
@@ -13,7 +15,10 @@ import com.epam.reshetnev.spring.core.domain.Event;
 public class EventDaoImpl implements EventDao {
 
     private ConcurrentMap<String, Event> events = new ConcurrentHashMap<String, Event>();
-    
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @Override
     public Event save(Event event) {
         while (true) {

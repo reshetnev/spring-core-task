@@ -3,6 +3,7 @@ package com.epam.reshetnev.spring.core.domain;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import com.epam.reshetnev.spring.core.domain.enums.Rating;
 import com.google.common.collect.Sets;
 
 public class Event {

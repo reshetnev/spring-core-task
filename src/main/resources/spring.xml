@@ -35,15 +35,15 @@
     <bean id="ticket" class="com.epam.reshetnev.spring.core.domain.Ticket" scope="prototype"/>
 
     <bean id="dateTimeFormatter" class="java.time.format.DateTimeFormatter" factory-method="ofPattern">
-        <constructor-arg value="dd.MM.yyyy HH.mm"/>
+        <constructor-arg value="yyyy-MM-dd HH:mm:ss"/>
     </bean>
 
     <bean id="dateFormatter" class="java.time.format.DateTimeFormatter" factory-method="ofPattern">
-        <constructor-arg value="dd.MM.yyyy"/>
+        <constructor-arg value="yyyy-MM-dd"/>
     </bean>
 
     <bean id="timeFormatter" class="java.time.format.DateTimeFormatter" factory-method="ofPattern">
-        <constructor-arg value="HH.mm"/>
+        <constructor-arg value="HH:mm:ss"/>
     </bean>
 
     <bean id="app" class="com.epam.reshetnev.spring.core.App"/>

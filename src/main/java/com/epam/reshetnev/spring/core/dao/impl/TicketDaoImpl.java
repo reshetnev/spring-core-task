@@ -4,6 +4,8 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.epam.reshetnev.spring.core.dao.TicketDao;
@@ -13,6 +15,9 @@ import com.epam.reshetnev.spring.core.domain.Ticket;
 public class TicketDaoImpl implements TicketDao {
 
     private ConcurrentMap<String, Ticket> tickets = new ConcurrentHashMap<String, Ticket>();
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Override
     public Ticket save(Ticket ticket) {

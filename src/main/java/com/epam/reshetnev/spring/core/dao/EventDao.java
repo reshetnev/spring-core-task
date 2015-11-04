@@ -8,7 +8,7 @@ public interface EventDao {
 
     public void delete(Event event);
 
-    public Event getEventById(Integer name);
+    public Event getEventById(Integer id);
 
     public Iterable<Event> getAllEvents();
 
