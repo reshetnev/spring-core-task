@@ -1,6 +1,6 @@
 package com.epam.reshetnev.spring.core.dao;
 
-import java.util.Optional;
+import java.util.List;
 
 import com.epam.reshetnev.spring.core.domain.Counter;
 
@@ -10,9 +10,9 @@ public interface CounterDao {
 
     public void delete(Counter counter);
 
-    public Optional<Counter> getCounterById(Integer id);
+    public Counter getById(Integer id);
 
-    public Iterable<Counter> getAllCounters();
+    public List<Counter> getAll();
 
     public void update(Counter counter);
 }

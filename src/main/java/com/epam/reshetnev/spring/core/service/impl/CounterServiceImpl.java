@@ -11,7 +11,6 @@ import com.epam.reshetnev.spring.core.dao.CounterDao;
 import com.epam.reshetnev.spring.core.domain.Counter;
 import com.epam.reshetnev.spring.core.domain.enums.CounterType;
 import com.epam.reshetnev.spring.core.service.CounterService;
-import com.google.common.collect.Lists;
 
 @Service
 public class CounterServiceImpl implements CounterService {
@@ -22,8 +21,9 @@ public class CounterServiceImpl implements CounterService {
     private CounterDao counterDao;
 
     @Override
-    public void insert(Counter counter) {
+    public Counter save(Counter counter) {
         counterDao.save(counter);
+        return getByTypeAndKeyName(counter.getCounterType(), counter.getKeyName());
     }
 
     @Override
@@ -33,41 +33,34 @@ public class CounterServiceImpl implements CounterService {
 
     @Override
     public Counter getById(Integer id) {
-
-        Optional<Counter> counterOpt = counterDao.getCounterById(id);
-
-        if (!counterOpt.isPresent()) {
-            log.info("Counter is not found with id = " + id);
-        }
-
-        return counterOpt.get();
+        return counterDao.getById(id);
     }
 
     @Override
     public List<Counter> getAll() {
-        return Lists.newArrayList(counterDao.getAllCounters());
+        return counterDao.getAll();
     }
 
     @Override
-    public Optional<Counter> getByTypeAndKeyName(CounterType counterType, String keyName) {
+    public Counter getByTypeAndKeyName(CounterType counterType, String keyName) {
         Optional<Counter> counter = getAll()
                 .stream()
                 .filter(c -> ((c.getCounterType() == counterType) &&
                         (c.getKeyName() == keyName)))
                 .findFirst();
-        return counter;
+
+        if (!counter.isPresent()) {
+            log.info("Counter is not found with (CounterType, KeyName): " + counterType + ", " + keyName);
+            return null;
+        }
+
+        return counter.get();
     }
 
     @Override
-    public void update(Counter counter) {
-
-        Optional<Counter> counterOpt = getByTypeAndKeyName(counter.getCounterType(), counter.getKeyName());
-
-        if (counterOpt.isPresent()) {
-            counterDao.update(counter);
-        } else {
-            log.info("Counter is not found with (CounterType, KeyName): " + counter.getCounterType() + counter.getKeyName());
-        }
+    public Counter update(Counter counter) {
+        counterDao.update(counter);
+        return getById(counter.getId());
     }
 
 }

@@ -1,14 +1,13 @@
 package com.epam.reshetnev.spring.core.dao.impl;
 
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.epam.reshetnev.spring.core.dao.UserDao;
+import com.epam.reshetnev.spring.core.dao.impl.rowmapper.UserRowMapper;
 import com.epam.reshetnev.spring.core.domain.User;
 
 @Repository
@@ -17,44 +16,41 @@ public class UserDaoImpl implements UserDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private ConcurrentMap<String, User> users = new ConcurrentHashMap<String, User>();
-
     @Override
-    public User save(User user) {
-        while (true) {
-            Integer id = generateId();
-            user.setId(id);
-            if (users.putIfAbsent(id.toString(), user) == null) {
-                break;
-            } else {
-                continue;
-            }
-        }
-        return user;
+    public void save(User user) {
+        jdbcTemplate.update("INSERT INTO users (id, name, email, birthDay) VALUES (?,?,?,?)",
+                null,
+                user.getName(),
+                user.getEmail(),
+                user.getBirthDay().toString());
     }
 
     @Override
     public void delete(User user) {
-        users.remove(user.getId().toString());
+        jdbcTemplate.update("DELETE FROM users WHERE users.id = ?",
+                user.getId());
     }
 
     @Override
-    public User getUserById(Integer id) {
-        return users.get(id);
+    public User getById(Integer id) {
+        return jdbcTemplate.queryForObject("SELECT * FROM users WHERE users.id = ?",
+                new Object[] {id},
+                new UserRowMapper());
     }
 
     @Override
-    public Iterable<User> getAllUsers() {
-        return users.values();
+    public List<User> getAll() {
+        return jdbcTemplate.query("SELECT * FROM users",
+                new UserRowMapper());
     }
 
-//    @Override
-//    public User update(User user) {
-//        return users.put(user.getId().toString(), user);
-//    }
-
-    public static Integer generateId() {
-        Random r = new Random();
-        return r.ints(1, Integer.MAX_VALUE).limit(1).findFirst().getAsInt();
+    @Override
+    public void update(User user) {
+        jdbcTemplate.update("UPDATE users SET name = ?, email = ?, birthDay = ? WHERE users.id = ?",
+                user.getName(),
+                user.getEmail(),
+                user.getBirthDay().toString(),
+                user.getId());
     }
+
 }

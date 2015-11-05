@@ -1,7 +1,6 @@
 package com.epam.reshetnev.spring.core.aspect;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.aspectj.lang.JoinPoint;
@@ -11,15 +10,16 @@ import org.aspectj.lang.annotation.Pointcut;
 
 import com.epam.reshetnev.spring.core.domain.Event;
 import com.epam.reshetnev.spring.core.domain.User;
+import com.google.common.collect.Maps;
 
 @Aspect
 public class DiscountAspect {
 
-    private Map<String, Integer> counter = new HashMap<String, Integer>();
+    private Map<String, Integer> counter = Maps.newHashMap();
 
-    private Map<String, Integer> counterBirthDayGetDiscountForUser = new HashMap<String, Integer>();
+    private Map<String, Integer> counterBirthDayGetDiscountForUser = Maps.newHashMap();
 
-    private Map<String, Integer> counterEveryTenGetDiscountForUser = new HashMap<String, Integer>();
+    private Map<String, Integer> counterEveryTenGetDiscountForUser = Maps.newHashMap();
 
     public Map<String, Integer> getCounter() {
         return counter;

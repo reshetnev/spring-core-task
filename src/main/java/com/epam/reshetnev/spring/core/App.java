@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,20 +34,8 @@ public class App {
     private static final Logger log = Logger.getLogger(App.class);
 
     @Autowired
-    @Qualifier("usersProps")
-    private Properties usersProps;
-
-    @Autowired
-    @Qualifier("dateFormatter")
-    private DateTimeFormatter dateFormatter;
-
-    @Autowired
     @Qualifier("dateTimeFormatter")
     private DateTimeFormatter dateTimeFormatter;
-
-    @Autowired
-    @Qualifier("timeFormatter")
-    private DateTimeFormatter timeFormatter;
 
     @Autowired
     private UserService userService;
@@ -72,7 +59,6 @@ public class App {
 
         ConfigurableApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
         App app = (App) ctx.getBean("app");
-        app.initUsers(ctx);
         app.initEvents(ctx);
         CounterAspect counterAspect = ctx.getBean(CounterAspect.class);
         DiscountAspect discountAspect = ctx.getBean(DiscountAspect.class);
@@ -93,6 +79,7 @@ public class App {
         User user2 = app.getUserByEmail("kim2@gmail.com");
         User user3 = app.getUserByEmail("iivanov@gmail.com");
         User user4 = ctx.getBean(User.class);
+        User user5 = app.createUser(ctx, "Alex", "alex@gmail.com", "1985-10-30");
 
         List<Ticket> tickets1 = app.getTicketsByEventAndSeats(event1, seatsForUser1);
         List<Ticket> tickets2 = app.getTicketsByEventAndSeats(event2, seatsForUser2);
@@ -133,15 +120,15 @@ public class App {
         log.info("EveryTenGetDiscount: " + counterEveryTenGetDiscountForUser.toString());
 
         for (String key : counterTotal.keySet()) {
-            counterService.insert(new Counter(CounterType.DISCOUNT_TOTAL, key, counterTotal.get(key)));
+            counterService.save(new Counter(CounterType.DISCOUNT_TOTAL, key, counterTotal.get(key)));
         }
 
         for (String key : counterBirthDayGetDiscountForUser.keySet()) {
-            counterService.insert(new Counter(CounterType.DISCOUNT_BIRTH_DAY, key, counterBirthDayGetDiscountForUser.get(key)));
+            counterService.save(new Counter(CounterType.DISCOUNT_BIRTH_DAY, key, counterBirthDayGetDiscountForUser.get(key)));
         }
 
         for (String key : counterEveryTenGetDiscountForUser.keySet()) {
-            counterService.insert(new Counter(CounterType.DISCOUNT_EVERY_TEN, key, counterEveryTenGetDiscountForUser.get(key)));
+            counterService.save(new Counter(CounterType.DISCOUNT_EVERY_TEN, key, counterEveryTenGetDiscountForUser.get(key)));
         }
     }
 
@@ -158,15 +145,15 @@ public class App {
         log.info("Tickets were booked: "+ counterBookTicket.toString());
 
         for (String key : counterGetEventByName.keySet()) {
-            counterService.insert(new Counter(CounterType.GET_EVENT_BY_NAME, key, counterGetEventByName.get(key)));
+            counterService.save(new Counter(CounterType.GET_EVENT_BY_NAME, key, counterGetEventByName.get(key)));
         }
 
         for (String key : counterGetTicketPrices.keySet()) {
-            counterService.insert(new Counter(CounterType.GET_TICKET_PRICES, key, counterGetTicketPrices.get(key)));
+            counterService.save(new Counter(CounterType.GET_TICKET_PRICES, key, counterGetTicketPrices.get(key)));
         }
 
         for (String key : counterBookTicket.keySet()) {
-            counterService.insert(new Counter(CounterType.BOOK_TICKET, key, counterBookTicket.get(key)));
+            counterService.save(new Counter(CounterType.BOOK_TICKET, key, counterBookTicket.get(key)));
         }
 
     }
@@ -186,7 +173,7 @@ public class App {
     }
 
     private void printAllUsers() {
-        userService.getAllUsers().forEach(u -> log.info(u.toString()));
+        userService.getAll().forEach(u -> log.info(u.toString()));
     }
 
     private void printAllEvents() {
@@ -208,7 +195,7 @@ public class App {
     }
 
     private User getUserByEmail(String email) {
-        return userService.getUserByEmail(email);
+        return userService.getByEmail(email);
     }
 
     private Event getEventByName(String name) {
@@ -217,10 +204,6 @@ public class App {
 
     private Auditorium getAuditoriumByName(String name) {
         return auditoriumService.getAuditoriumByName(name);
-    }
-
-    private User registerUser(User user) {
-        return userService.register(user);
     }
 
     private Event createEvent(ConfigurableApplicationContext ctx, String name, String airDateTime, Double basePrice,
@@ -239,13 +222,14 @@ public class App {
 
     private User createUser(ConfigurableApplicationContext ctx, String userName, String userEmail,
             String userBirthDay) {
+
         User user = (User) ctx.getBean("user");
 
         user.setName(userName);
         user.setEmail(userEmail);
-        user.setBirthDay(LocalDate.parse(userBirthDay, dateFormatter));
+        user.setBirthDay(LocalDate.parse(userBirthDay));
 
-        return user;
+        return userService.save(user);
     }
 
     private Ticket createTicket(ConfigurableApplicationContext ctx, Event event, Integer seat) {
@@ -255,20 +239,6 @@ public class App {
         ticket.setSeat(seat);
 
         return ticket;
-    }
-
-    private void initUsers(ConfigurableApplicationContext ctx) {
-        User user1 = createUser(ctx, usersProps.getProperty("kim1.name"), usersProps.getProperty("kim1.email"),
-                usersProps.getProperty("kim1.birthDay"));
-        registerUser(user1);
-
-        User user2 = createUser(ctx, usersProps.getProperty("kim2.name"), usersProps.getProperty("kim2.email"),
-                usersProps.getProperty("kim2.birthDay"));
-        registerUser(user2);
-
-        User user3 = createUser(ctx, usersProps.getProperty("ivan.name"), usersProps.getProperty("ivan.email"),
-                usersProps.getProperty("ivan.birthDay"));
-        registerUser(user3);
     }
 
     private void initEvents(ConfigurableApplicationContext ctx) {

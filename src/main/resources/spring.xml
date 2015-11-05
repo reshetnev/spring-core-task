@@ -12,8 +12,8 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-4.2.xsd
         http://www.springframework.org/schema/aop
-        http://www.springframework.org/schema/aop/spring-aop-4.2.xsd"
->
+        http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+        ">
 
     <import resource="users.xml"/>
     <import resource="auditoriums.xml"/>
@@ -48,13 +48,9 @@
 
     <bean id="app" class="com.epam.reshetnev.spring.core.App"/>
 
-    <!-- creates a java.util.Properties instance with values loaded from the supplied location -->
-    <util:properties id="usersProps" location="classpath:users.properties"/>
-
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>classpath:users.properties</value>
                 <value>classpath:auditoriums.properties</value>
                 <value>classpath:discounts.properties</value>
                 <value>classpath:db.properties</value>

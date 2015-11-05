@@ -1,16 +1,18 @@
 package com.epam.reshetnev.spring.core.dao;
 
+import java.util.List;
+
 import com.epam.reshetnev.spring.core.domain.User;
 
 public interface UserDao {
 
-    public User save(User user);
+    public void save(User user);
 
     public void delete(User user);
 
-    public User getUserById(Integer id);
+    public User getById(Integer id);
 
-    public Iterable<User> getAllUsers();
+    public List<User> getAll();
 
-//    public User update(User user);
+    public void update(User user);
 }
