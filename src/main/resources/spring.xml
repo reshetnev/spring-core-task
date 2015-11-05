@@ -15,7 +15,6 @@
         http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
         ">
 
-    <import resource="users.xml"/>
     <import resource="auditoriums.xml"/>
     <import resource="discounts.xml"/>
     <import resource="db.xml"/>
@@ -29,6 +28,8 @@
 
     <bean id="counterAspect" class="com.epam.reshetnev.spring.core.aspect.CounterAspect"/>
     <bean id="discountAspect" class="com.epam.reshetnev.spring.core.aspect.DiscountAspect"/>
+
+    <bean id="user" class="com.epam.reshetnev.spring.core.domain.User" scope="prototype"/>
 
     <bean id="event" class="com.epam.reshetnev.spring.core.domain.Event" scope="prototype"/>
 

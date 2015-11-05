@@ -1,18 +1,18 @@
 package com.epam.reshetnev.spring.core.service.impl;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.epam.reshetnev.spring.core.domain.Auditorium;
 import com.epam.reshetnev.spring.core.domain.Event;
 import com.epam.reshetnev.spring.core.domain.Ticket;
 import com.epam.reshetnev.spring.core.domain.User;
+import com.epam.reshetnev.spring.core.service.AuditoriumService;
 import com.epam.reshetnev.spring.core.service.BookingService;
 import com.epam.reshetnev.spring.core.service.DiscountService;
 import com.google.common.collect.Lists;
@@ -28,8 +28,11 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     private DiscountService discountService;
 
+    @Autowired
+    private AuditoriumService auditoriumService;
+
     @Override
-    public List<Double> getTicketPrices(Event event, LocalDateTime airDateTime, List<Integer> seats, User user) {
+    public List<Double> getTicketPrices(Event event, LocalDate date, List<Integer> seats, User user) {
 
         List<Double> prices = Lists.newArrayList();
 
@@ -39,15 +42,17 @@ public class BookingServiceImpl implements BookingService {
 
             Integer seat = seats.get(i);
 
-            if (event.getAuditorium().getVipSeats().contains(seat)) {
+            Auditorium auditorium = auditoriumService.getAuditoriumByName(event.getAuditorium());
+
+            if (auditorium.getVipSeats().contains(seat)) {
                 price += event.getBasePrice()*vipIncrease/100;
             }
 
             Integer ordinalNumberTicket = i+1;
-            
-            discountService.checkDiscounts(user, event, airDateTime.toLocalDate(), ordinalNumberTicket);
 
-            price -= discountService.getDiscount(user, event, airDateTime.toLocalDate());
+            discountService.checkDiscounts(user, event, date, ordinalNumberTicket);
+
+            price -= discountService.getDiscount(user, event, date);
 
             prices.add(price);
         }
@@ -61,22 +66,16 @@ public class BookingServiceImpl implements BookingService {
         if (!ticket.getIsPurchased()) {
             ticket.setIsPurchased(true);
             ticket.setUser(user);
-            if (user.getId() != null) {
-//                user.getBookedTickets().add(ticket);
-            }
         } else {
-            log.info("Ticket is sold");
+            log.info("Ticket is booked");
         }
 
     }
 
     @Override
-    public Set<Ticket> getTicketsForEvent(Event event, LocalDateTime airDateTime) {
-        Set<Ticket> tickets = event.getTickets()
-                .stream()
-                .filter(ticket -> (ticket.getIsPurchased()))
-                .collect(Collectors.toSet());
-        return tickets;
+    public List<Ticket> getTicketsForEvent(Event event) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

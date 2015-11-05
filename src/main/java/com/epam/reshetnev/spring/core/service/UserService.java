@@ -7,7 +7,7 @@ import com.epam.reshetnev.spring.core.domain.User;
 
 public interface UserService {
 
-    public User save(User user);
+    public void save(User user);
 
     public void delete(User user);
 
@@ -21,5 +21,5 @@ public interface UserService {
 
     public List<User> getAll();
 
-    public User update(User user);
+    public void update(User user);
 }

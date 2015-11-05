@@ -11,6 +11,7 @@ import com.epam.reshetnev.spring.core.dao.CounterDao;
 import com.epam.reshetnev.spring.core.domain.Counter;
 import com.epam.reshetnev.spring.core.domain.enums.CounterType;
 import com.epam.reshetnev.spring.core.service.CounterService;
+import com.google.common.base.Preconditions;
 
 @Service
 public class CounterServiceImpl implements CounterService {
@@ -21,9 +22,8 @@ public class CounterServiceImpl implements CounterService {
     private CounterDao counterDao;
 
     @Override
-    public Counter save(Counter counter) {
+    public void save(Counter counter) {
         counterDao.save(counter);
-        return getByTypeAndKeyName(counter.getCounterType(), counter.getKeyName());
     }
 
     @Override
@@ -46,7 +46,7 @@ public class CounterServiceImpl implements CounterService {
         Optional<Counter> counter = getAll()
                 .stream()
                 .filter(c -> ((c.getCounterType() == counterType) &&
-                        (c.getKeyName() == keyName)))
+                        (c.getKeyName().equals(keyName))))
                 .findFirst();
 
         if (!counter.isPresent()) {
@@ -58,9 +58,9 @@ public class CounterServiceImpl implements CounterService {
     }
 
     @Override
-    public Counter update(Counter counter) {
+    public void update(Counter counter) {
+        Preconditions.checkNotNull(counter.getId(), "Counter id should not be null");
         counterDao.update(counter);
-        return getById(counter.getId());
     }
 
 }

@@ -7,7 +7,7 @@ import com.epam.reshetnev.spring.core.domain.enums.CounterType;
 
 public interface CounterService {
 
-    public Counter save(Counter counter);
+    public void save(Counter counter);
 
     public void delete(Counter counter);
 
@@ -17,5 +17,5 @@ public interface CounterService {
 
     public List<Counter> getAll();
 
-    public Counter update(Counter counter);
+    public void update(Counter counter);
 }

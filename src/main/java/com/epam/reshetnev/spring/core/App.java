@@ -1,20 +1,16 @@
 package com.epam.reshetnev.spring.core;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.epam.reshetnev.spring.core.aspect.CounterAspect;
 import com.epam.reshetnev.spring.core.aspect.DiscountAspect;
-import com.epam.reshetnev.spring.core.domain.Auditorium;
 import com.epam.reshetnev.spring.core.domain.Counter;
 import com.epam.reshetnev.spring.core.domain.Event;
 import com.epam.reshetnev.spring.core.domain.Ticket;
@@ -32,10 +28,6 @@ import com.google.common.collect.Lists;
 public class App {
 
     private static final Logger log = Logger.getLogger(App.class);
-
-    @Autowired
-    @Qualifier("dateTimeFormatter")
-    private DateTimeFormatter dateTimeFormatter;
 
     @Autowired
     private UserService userService;
@@ -59,35 +51,49 @@ public class App {
 
         ConfigurableApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
         App app = (App) ctx.getBean("app");
-        app.initEvents(ctx);
         CounterAspect counterAspect = ctx.getBean(CounterAspect.class);
         DiscountAspect discountAspect = ctx.getBean(DiscountAspect.class);
 
-        List<Integer> seatsForUser1 = Lists.newArrayList(2,3,4,5,6,7,8,9,10,11);
-        List<Integer> seatsForUser2 = Lists.newArrayList(5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27);
-
-        List<Integer> seatsForUser4 = Lists.newArrayList(1,2,30,31); //check in DB
-
-        Event event1 = app.getEventByName("MINIONS");
-        app.initTickets(ctx, event1, seatsForUser1);
-
-        Event event2 = app.getEventByName("007 Spectr");
-        app.initTickets(ctx, event2, seatsForUser2);
-        app.initTickets(ctx, event2, seatsForUser4);
-
         User user1 = app.getUserByEmail("kim1@gmail.com");
-        User user2 = app.getUserByEmail("kim2@gmail.com");
-        User user3 = app.getUserByEmail("iivanov@gmail.com");
-        User user4 = ctx.getBean(User.class);
-        User user5 = app.createUser(ctx, "Alex", "alex@gmail.com", "1985-10-30");
-
+        Event event1 = app.getEventByName("MINIONS");
+        List<Integer> seatsForUser1 = Lists.newArrayList(2,3,4,5,6,7,8,9,10,11);
+        app.printTicketPrices(event1, user1, seatsForUser1);
+        app.initTickets(ctx, event1, seatsForUser1);
         List<Ticket> tickets1 = app.getTicketsByEventAndSeats(event1, seatsForUser1);
-        List<Ticket> tickets2 = app.getTicketsByEventAndSeats(event2, seatsForUser2);
-        List<Ticket> tickets4 = app.getTicketsByEventAndSeats(event2, seatsForUser4);
-
         app.bookTickets(user1, tickets1);
+
+        User user2 = app.getUserByEmail("kim2@gmail.com");
+        Event event21 = app.getEventByName("007 Spectr");
+        List<Integer> seatsForUser2 = Lists.newArrayList(5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27);
+        app.printTicketPrices(event21, user2, seatsForUser2);
+        app.initTickets(ctx, event21, seatsForUser2);
+        List<Ticket> tickets2 = app.getTicketsByEventAndSeats(event21, seatsForUser2);
         app.bookTickets(user2, tickets2);
+
+        User user4 = ctx.getBean(User.class);
+        Event event22 = app.getEventByName("007 Spectr");
+        List<Integer> seatsForUser4 = Lists.newArrayList(1,2,30,31);
+        app.printTicketPrices(event22, user4, seatsForUser4);
+        app.initTickets(ctx, event22, seatsForUser4);
+        List<Ticket> tickets4 = app.getTicketsByEventAndSeats(event22, seatsForUser4);
         app.bookTickets(user4, tickets4);
+
+        app.createEvent(ctx, "Everest", "2015-12-01", "20:00", 10d, "low", "Small");
+        User user3 = app.getUserByEmail("iivanov@gmail.com");
+        Event event31 = app.getEventByName("Everest");
+        Event event23 = app.getEventByName("007 Spectr");
+        List<Integer> seatsForUser3 = Lists.newArrayList(3,4);
+        app.printTicketPrices(event31, user3, seatsForUser3);
+        app.printTicketPrices(event23, user3, seatsForUser3);
+        app.initTickets(ctx, event31, seatsForUser3);
+        app.initTickets(ctx, event23, seatsForUser3);
+
+        app.createUser(ctx, "Alex", "alex@gmail.com", "1985-10-30");
+        User user5 = app.getUserByEmail("alex@gmail.com");
+        Event event32 = app.getEventByName("Everest");
+        List<Integer> seatsForUser5 = Lists.newArrayList(17,18);
+        app.printTicketPrices(event32, user5, seatsForUser5);
+        app.initTickets(ctx, event32, seatsForUser5);
 
         app.printAllAuditoriums();
 
@@ -96,10 +102,6 @@ public class App {
         app.printAllEvents();
 
         app.printAllTickets();
-
-        app.printTicketPrices(event1, user1, seatsForUser1);
-        app.printTicketPrices(event2, user2, seatsForUser2);
-        app.printTicketPrices(event2, user4, seatsForUser4);
 
         app.printCounterAspect(counterAspect);
         app.printDiscountAspect(discountAspect);
@@ -164,7 +166,7 @@ public class App {
 
     private void printTicketPrices(Event event, User user, List<Integer> seats) {
 
-        List<Double> prices = bookingService.getTicketPrices(event, event.getAirDateTime(), seats, user);
+        List<Double> prices = bookingService.getTicketPrices(event, event.getDate(), seats, user);
         log.info(prices.toString());
     }
 
@@ -202,36 +204,6 @@ public class App {
         return eventService.getByName(name);
     }
 
-    private Auditorium getAuditoriumByName(String name) {
-        return auditoriumService.getAuditoriumByName(name);
-    }
-
-    private Event createEvent(ConfigurableApplicationContext ctx, String name, String airDateTime, Double basePrice,
-            Rating rating, Auditorium auditorium) {
-
-        Event event = ctx.getBean(Event.class);
-
-        event.setName(name);
-        event.setBasePrice(basePrice);
-        event.setRating(rating);
-
-        eventService.assignAuditorium(event, auditorium, LocalDateTime.parse(airDateTime, dateTimeFormatter));
-
-        return event;
-    }
-
-    private User createUser(ConfigurableApplicationContext ctx, String userName, String userEmail,
-            String userBirthDay) {
-
-        User user = (User) ctx.getBean("user");
-
-        user.setName(userName);
-        user.setEmail(userEmail);
-        user.setBirthDay(LocalDate.parse(userBirthDay));
-
-        return userService.save(user);
-    }
-
     private Ticket createTicket(ConfigurableApplicationContext ctx, Event event, Integer seat) {
         Ticket ticket= ctx.getBean(Ticket.class);
 
@@ -241,22 +213,37 @@ public class App {
         return ticket;
     }
 
-    private void initEvents(ConfigurableApplicationContext ctx) {
-        Event event1 = createEvent(ctx, "MINIONS", "2015-10-25 15:00:00", 200d, Rating.HIGH,
-                getAuditoriumByName("Big"));
-        eventService.create(event1);
-
-        Event event2 = createEvent(ctx, "007 Spectr", "2015-10-30 21:00:00", 100d, Rating.MID,
-                getAuditoriumByName("Mid"));
-        eventService.create(event2);
-    }
-
     private void initTickets(ConfigurableApplicationContext ctx, Event event, List<Integer> seats) {
         for (Integer seat : seats) {
             Ticket ticket = createTicket(ctx, event, seat);
             ticketService.register(ticket);
-//            event.getTickets().add(ticket);
         }
+    }
+
+    private void createEvent(ConfigurableApplicationContext ctx, String name, String date, String time,
+            Double basePrice, String rating, String auditorium) {
+
+        Event event = ctx.getBean(Event.class);
+
+        event.setName(name);
+        event.setBasePrice(basePrice);
+        event.setRating(Rating.valueOf(rating.toUpperCase()));
+
+        eventService.assignAuditorium(event, auditorium, date, time);
+
+        eventService.save(event);
+    }
+
+    private void createUser(ConfigurableApplicationContext ctx, String userName, String userEmail,
+            String userBirthDay) {
+
+        User user = ctx.getBean(User.class);
+
+        user.setName(userName);
+        user.setEmail(userEmail);
+        user.setBirthDay(LocalDate.parse(userBirthDay));
+
+        userService.save(user);
     }
 
 }

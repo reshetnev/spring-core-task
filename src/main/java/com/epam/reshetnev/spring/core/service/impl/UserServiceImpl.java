@@ -23,9 +23,8 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    public User save(User user) {
+    public void save(User user) {
         userDao.save(user);
-        return getByEmail(user.getEmail());
     }
 
     @Override
@@ -73,10 +72,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User user) {
-        Preconditions.checkNotNull(user.getId(), "User should be registered");
+    public void update(User user) {
+        Preconditions.checkNotNull(user.getId(), "User id should not be null");
         userDao.update(user);
-        return getById(user.getId());
     }
 
 }

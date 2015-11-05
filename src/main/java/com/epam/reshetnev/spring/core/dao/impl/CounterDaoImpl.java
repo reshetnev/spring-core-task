@@ -20,7 +20,7 @@ public class CounterDaoImpl implements CounterDao {
     public void save(Counter counter) {
          jdbcTemplate.update("INSERT INTO counters (id, counterType, keyName, valueCounter) VALUES (?,?,?,?)",
                 null,
-                counter.getCounterType().toString(),
+                counter.getCounterType().name(),
                 counter.getKeyName(),
                 counter.getValueCounter());
     }

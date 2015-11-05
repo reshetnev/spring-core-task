@@ -1,6 +1,6 @@
 package com.epam.reshetnev.spring.core.aspect;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -65,8 +65,8 @@ public class CounterAspect {
     private void bookingServiceGetTicketPricesMethod() {
     }
 
-    @AfterReturning("bookingServiceGetTicketPricesMethod() && args(event, airDateTime, seats, user)")
-    public void countGetTicketPrices(JoinPoint jp, Event event, LocalDateTime airDateTime, List<Integer> seats, User user) {
+    @AfterReturning("bookingServiceGetTicketPricesMethod() && args(event, date, seats, user)")
+    public void countGetTicketPrices(JoinPoint jp, Event event, LocalDate date, List<Integer> seats, User user) {
         String eventName = event.getName();
 
         if (!counterGetTicketPrices.containsKey(eventName)) {
