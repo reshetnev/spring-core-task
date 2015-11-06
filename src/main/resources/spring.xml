@@ -23,29 +23,15 @@
     <context:component-scan base-package="com.epam.reshetnev.spring.core.dao.impl"/>
     <context:component-scan base-package="com.epam.reshetnev.spring.core.service.impl"/>
     <context:component-scan base-package="com.epam.reshetnev.spring.core.discount.impl"/>
+    <context:component-scan base-package="com.epam.reshetnev.spring.core.aspect"/>
 
     <aop:aspectj-autoproxy />
-
-    <bean id="counterAspect" class="com.epam.reshetnev.spring.core.aspect.CounterAspect"/>
-    <bean id="discountAspect" class="com.epam.reshetnev.spring.core.aspect.DiscountAspect"/>
 
     <bean id="user" class="com.epam.reshetnev.spring.core.domain.User" scope="prototype"/>
 
     <bean id="event" class="com.epam.reshetnev.spring.core.domain.Event" scope="prototype"/>
 
     <bean id="ticket" class="com.epam.reshetnev.spring.core.domain.Ticket" scope="prototype"/>
-
-    <bean id="dateTimeFormatter" class="java.time.format.DateTimeFormatter" factory-method="ofPattern">
-        <constructor-arg value="yyyy-MM-dd HH:mm:ss"/>
-    </bean>
-
-    <bean id="dateFormatter" class="java.time.format.DateTimeFormatter" factory-method="ofPattern">
-        <constructor-arg value="yyyy-MM-dd"/>
-    </bean>
-
-    <bean id="timeFormatter" class="java.time.format.DateTimeFormatter" factory-method="ofPattern">
-        <constructor-arg value="HH:mm:ss"/>
-    </bean>
 
     <bean id="app" class="com.epam.reshetnev.spring.core.App"/>
 

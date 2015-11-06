@@ -8,12 +8,14 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
 
 import com.epam.reshetnev.spring.core.domain.Event;
 import com.epam.reshetnev.spring.core.domain.Ticket;
 import com.epam.reshetnev.spring.core.domain.User;
 import com.google.common.collect.Maps;
 
+@Component
 @Aspect
 public class CounterAspect {
 
@@ -21,7 +23,7 @@ public class CounterAspect {
 
     private Map<String, Integer> counterGetTicketPrices = Maps.newHashMap();
 
-    private Map<String, Integer> counterBookTicket = Maps.newHashMap();
+    private Map<Integer, Integer> counterBookTicket = Maps.newHashMap();
 
     public Map<String, Integer> getCounterGetEventByName() {
         return counterGetEventByName;
@@ -39,11 +41,11 @@ public class CounterAspect {
         this.counterGetTicketPrices = counterGetTicketPrices;
     }
 
-    public Map<String, Integer> getCounterBookTicket() {
+    public Map<Integer, Integer> getCounterBookTicket() {
         return counterBookTicket;
     }
 
-    public void setCounterBookTicket(Map<String, Integer> counterBookTicket) {
+    public void setCounterBookTicket(Map<Integer, Integer> counterBookTicket) {
         this.counterBookTicket = counterBookTicket;
     }
 
@@ -82,7 +84,7 @@ public class CounterAspect {
 
     @AfterReturning("bookingServiceBookTicketMethod() && args(user, ticket)")
     public void countBookTicket(JoinPoint jp, User user, Ticket ticket) {
-        String eventName = ticket.getEvent().getName();
+        Integer eventName = ticket.getEventId();
 
         if (!counterBookTicket.containsKey(eventName)) {
             counterBookTicket.put(eventName, 0);

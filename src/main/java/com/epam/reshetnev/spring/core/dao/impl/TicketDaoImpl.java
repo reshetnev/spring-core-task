@@ -1,56 +1,58 @@
 package com.epam.reshetnev.spring.core.dao.impl;
 
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.epam.reshetnev.spring.core.dao.TicketDao;
+import com.epam.reshetnev.spring.core.dao.impl.rowmapper.TicketRowMapper;
 import com.epam.reshetnev.spring.core.domain.Ticket;
 
 @Repository
 public class TicketDaoImpl implements TicketDao {
 
-    private ConcurrentMap<String, Ticket> tickets = new ConcurrentHashMap<String, Ticket>();
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public Ticket save(Ticket ticket) {
-        while (true) {
-            Integer id = generateId();
-            ticket.setId(id);
-            if (tickets.putIfAbsent(id.toString(), ticket) == null) {
-                break;
-            } else {
-                continue;
-            }
-        }
-        return ticket;
+    public void save(Ticket ticket) {
+        jdbcTemplate.update("INSERT INTO tickets (id, eventId, userId, seat, isPurchased) VALUES (?,?,?,?,?)",
+                null,
+                ticket.getEventId(),
+                ticket.getUserId(),
+                ticket.getSeat(),
+                ticket.getIsPurchased());
     }
 
     @Override
     public void delete(Ticket ticket) {
-        tickets.remove(ticket.getId().toString());
-
+        jdbcTemplate.update("DELETE FROM tickets WHERE tickets.id = ?",
+                ticket.getId());
     }
 
     @Override
-    public Ticket getTicketById(Integer id) {
-        return tickets.get(id);
+    public Ticket getById(Integer id) {
+        return jdbcTemplate.queryForObject("SELECT * FROM tickets WHERE tickets.id = ?",
+                new Object[] {id},
+                new TicketRowMapper());
     }
 
     @Override
-    public Iterable<Ticket> getAllTickets() {
-        return tickets.values();
+    public List<Ticket> getAll() {
+        return jdbcTemplate.query("SELECT * FROM tickets",
+                new TicketRowMapper());
     }
 
-    public static Integer generateId() {
-        Random r = new Random();
-        return r.ints(1, Integer.MAX_VALUE).limit(1).findFirst().getAsInt();
+    @Override
+    public void update(Ticket ticket) {
+        jdbcTemplate.update("UPDATE tickets SET eventId = ?, userId = ?, seat = ?, isPurchased = ? WHERE tickets.id = ?",
+                ticket.getEventId(),
+                ticket.getUserId(),
+                ticket.getSeat(),
+                ticket.getIsPurchased(),
+                ticket.getId());
     }
+
 }

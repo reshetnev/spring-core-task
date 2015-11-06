@@ -57,4 +57,10 @@ public class Counter {
         this.valueCounter = valueCounter;
     }
 
+    @Override
+    public String toString() {
+        return "Counter [id=" + id + ", counterType=" + counterType + ", keyName=" + keyName + ", valueCounter="
+                + valueCounter + "]";
+    }
+
 }

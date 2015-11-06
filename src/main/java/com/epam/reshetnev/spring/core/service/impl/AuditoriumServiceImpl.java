@@ -18,7 +18,7 @@ public class AuditoriumServiceImpl implements AuditoriumService {
     @Autowired
     private List<Auditorium> auditoriumList;
 
-    public List<Auditorium> getAuditoriums() {
+    public List<Auditorium> getAll() {
         return auditoriumList;
     }
 
@@ -33,8 +33,8 @@ public class AuditoriumServiceImpl implements AuditoriumService {
     }
 
     @Override
-    public Auditorium getAuditoriumByName(String name) {
-        Optional<Auditorium> auditorium = getAuditoriums()
+    public Auditorium getByName(String name) {
+        Optional<Auditorium> auditorium = getAll()
                 .stream()
                 .filter(a -> (a.getName().equals(name)))
                 .findFirst();

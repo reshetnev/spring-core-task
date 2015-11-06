@@ -2,6 +2,7 @@ package com.epam.reshetnev.spring.core.service.impl;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import com.epam.reshetnev.spring.core.domain.User;
 import com.epam.reshetnev.spring.core.service.AuditoriumService;
 import com.epam.reshetnev.spring.core.service.BookingService;
 import com.epam.reshetnev.spring.core.service.DiscountService;
+import com.epam.reshetnev.spring.core.service.TicketService;
 import com.google.common.collect.Lists;
 
 @Service
@@ -31,6 +33,9 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     private AuditoriumService auditoriumService;
 
+    @Autowired
+    private TicketService ticketService;
+
     @Override
     public List<Double> getTicketPrices(Event event, LocalDate date, List<Integer> seats, User user) {
 
@@ -42,7 +47,7 @@ public class BookingServiceImpl implements BookingService {
 
             Integer seat = seats.get(i);
 
-            Auditorium auditorium = auditoriumService.getAuditoriumByName(event.getAuditorium());
+            Auditorium auditorium = auditoriumService.getByName(event.getAuditorium());
 
             if (auditorium.getVipSeats().contains(seat)) {
                 price += event.getBasePrice()*vipIncrease/100;
@@ -65,7 +70,10 @@ public class BookingServiceImpl implements BookingService {
 
         if (!ticket.getIsPurchased()) {
             ticket.setIsPurchased(true);
-            ticket.setUser(user);
+            if (user.getId() != null) {
+                ticket.setUserId(user.getId());
+            }
+            ticketService.update(ticket);
         } else {
             log.info("Ticket is booked");
         }
@@ -74,8 +82,10 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<Ticket> getTicketsForEvent(Event event) {
-        // TODO Auto-generated method stub
-        return null;
+        return ticketService.getAll()
+                .stream()
+                .filter(t -> t.getEventId().equals(event.getId()))
+                .collect(Collectors.toList());
     }
 
 }

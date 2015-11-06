@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import com.epam.reshetnev.spring.core.dao.UserDao;
 import com.epam.reshetnev.spring.core.domain.Ticket;
 import com.epam.reshetnev.spring.core.domain.User;
+import com.epam.reshetnev.spring.core.service.TicketService;
 import com.epam.reshetnev.spring.core.service.UserService;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -21,6 +23,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private TicketService ticketService;
 
     @Override
     public void save(User user) {
@@ -62,8 +67,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Ticket> getBookedTickets(User user) {
-        // TODO Auto-generated method stub
-        return null;
+        List<Ticket> tickets = Lists.newArrayList();
+
+        Integer userId = user.getId();
+
+        for (Ticket ticket : ticketService.getAll()) {
+            Integer ticketId = ticket.getUserId();
+            if ((ticketId != null)
+                && (userId != null)
+                && (ticketId.equals(userId))) {
+                tickets.add(ticket);
+            }
+        }
+
+        return tickets;
     }
 
     @Override

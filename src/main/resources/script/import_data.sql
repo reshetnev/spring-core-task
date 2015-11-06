@@ -3,7 +3,7 @@ INSERT INTO users VALUES (null, 'Kim', 'kim2@gmail.com', '1982-10-31');
 INSERT INTO users VALUES (null, 'Ivan Ivanov', 'iivanov@gmail.com', '1983-12-01');
 INSERT INTO events VALUES (null, 'MINIONS', '2015-10-25', '15:00:00', 200, 'HIGH', 'Big');
 INSERT INTO events VALUES (null, '007 Spectr', '2015-10-30', '21:00:00', 100, 'MID', 'Mid');
-INSERT INTO tickets VALUES (null, 1, 1, 2, true);
+/*INSERT INTO tickets VALUES (null, 1, 1, 2, true);
 INSERT INTO tickets VALUES (null, 1, 1, 3, true);
 INSERT INTO tickets VALUES (null, 1, 1, 4, true);
 INSERT INTO tickets VALUES (null, 1, 1, 5, true);
@@ -39,5 +39,4 @@ INSERT INTO tickets VALUES (null, 2, 2, 27, true);
 INSERT INTO tickets VALUES (null, 2, 3, 3, true);
 INSERT INTO tickets VALUES (null, 2, 3, 4, true);
 INSERT INTO tickets VALUES (null, 2, 3, 28, true);
-INSERT INTO tickets VALUES (null, 2, 3, 29, true);
-
+INSERT INTO tickets VALUES (null, 2, 3, 29, true);*/
