@@ -59,12 +59,21 @@ public class App {
         App app = (App) ctx.getBean("app");
 
         User user1 = app.getUserByEmail("kim1@gmail.com");
+        log.info("User kim1@gmail.com has loged.");
         Event event1 = app.getEventByName("MINIONS");
+        log.info("User kim1@gmail.com has get Event MINIONS.");
         List<Integer> seatsForUser1 = Lists.newArrayList(2,3,4,5,6,7,8,9,10,11);
+        log.info("User kim1@gmail.com has chosen Seats 2,3,4,5,6,7,8,9,10,11 for Event MINIONS.");
         app.printTicketPrices(event1, user1, seatsForUser1);
+        log.info("User kim1@gmail.com has get TicketPrices with Discounts for chosen Seats and  Event.");
         app.createTickets(ctx, event1, seatsForUser1);
+        log.info("Tickets have been generated for chosen Seats and  Event.");
         List<Ticket> tickets1 = app.getTicketsByEventAndSeats(event1, seatsForUser1);
+        app.printTickets(tickets1);
         app.bookTickets(user1, tickets1);
+        log.info("Tickets have been booked for chosen Seats and  Event.");
+        List<Ticket> bookedTickets1 = app.getTicketsByEventAndSeats(event1, seatsForUser1);
+        app.printTickets(bookedTickets1);
 
         User user2 = app.getUserByEmail("kim2@gmail.com");
         Event event21 = app.getEventByName("007 Spectr");
@@ -109,7 +118,7 @@ public class App {
 
         app.printAllEvents();
 
-        app.printAllTickets();
+//        app.printAllTickets();
 
         app.printAllCounters();
 
@@ -126,6 +135,10 @@ public class App {
 
     private void printAllTickets() {
         ticketService.getAll().forEach(t -> log.info(t.toString()));
+    }
+
+    private void printTickets(List<Ticket> tickets) {
+        tickets.forEach(t -> log.info(t.toString()));
     }
 
     private void printAllEvents() {
