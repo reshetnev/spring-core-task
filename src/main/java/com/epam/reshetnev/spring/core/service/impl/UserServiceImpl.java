@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
             Integer ticketId = ticket.getUserId();
             if ((ticketId != null)
                 && (userId != null)
-                && (ticketId.equals(userId))) {
+                && (ticket.getUserId().equals(userId))) {
                 tickets.add(ticket);
             }
         }

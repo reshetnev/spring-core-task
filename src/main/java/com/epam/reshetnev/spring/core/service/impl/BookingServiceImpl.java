@@ -75,7 +75,7 @@ public class BookingServiceImpl implements BookingService {
             }
             ticketService.update(ticket);
         } else {
-            log.info("Ticket is booked");
+            log.info(ticket + " is booked");
         }
 
     }
