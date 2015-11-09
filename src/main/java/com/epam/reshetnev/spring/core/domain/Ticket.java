@@ -4,13 +4,24 @@ public class Ticket {
 
     private Integer id;
 
-    private Event event;
+    private Integer eventId;
 
-    private User user;
+    private Integer userId;
 
     private Integer seat;
 
     private Boolean isPurchased = false;
+
+    public Ticket() {
+    }
+
+    public Ticket(Integer id, Integer eventId, Integer userId, Integer seat, Boolean isPurchased) {
+        this.id = id;
+        this.eventId = eventId;
+        this.userId = userId;
+        this.seat = seat;
+        this.isPurchased = isPurchased;
+    }
 
     public Integer getId() {
         return id;
@@ -20,20 +31,20 @@ public class Ticket {
         this.id = id;
     }
 
-    public Event getEvent() {
-        return event;
+    public Integer getEventId() {
+        return eventId;
     }
 
-    public void setEvent(Event event) {
-        this.event = event;
+    public void setEventId(Integer eventId) {
+        this.eventId = eventId;
     }
 
-    public User getUser() {
-        return user;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public Integer getSeat() {
@@ -54,9 +65,7 @@ public class Ticket {
 
     @Override
     public String toString() {
-        String userEmail = ((user.getId() != null) && (user.getEmail() != null)) ? user.getEmail() : "User was not registered.";
-
-        return "Ticket [id=" + id + ", event=" + event.getName() + ", user=" + userEmail + ", seat=" + seat + ", isPurchased="
+        return "Ticket [id=" + id + ", eventId=" + eventId + ", userId=" + userId + ", seat=" + seat + ", isPurchased="
                 + isPurchased + "]";
     }
 
@@ -64,11 +73,11 @@ public class Ticket {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((event == null) ? 0 : event.hashCode());
+        result = prime * result + ((eventId == null) ? 0 : eventId.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((isPurchased == null) ? 0 : isPurchased.hashCode());
         result = prime * result + ((seat == null) ? 0 : seat.hashCode());
-        result = prime * result + ((user == null) ? 0 : user.hashCode());
+        result = prime * result + ((userId == null) ? 0 : userId.hashCode());
         return result;
     }
 
@@ -81,10 +90,10 @@ public class Ticket {
         if (getClass() != obj.getClass())
             return false;
         Ticket other = (Ticket) obj;
-        if (event == null) {
-            if (other.event != null)
+        if (eventId == null) {
+            if (other.eventId != null)
                 return false;
-        } else if (!event.equals(other.event))
+        } else if (!eventId.equals(other.eventId))
             return false;
         if (id == null) {
             if (other.id != null)
@@ -101,10 +110,10 @@ public class Ticket {
                 return false;
         } else if (!seat.equals(other.seat))
             return false;
-        if (user == null) {
-            if (other.user != null)
+        if (userId == null) {
+            if (other.userId != null)
                 return false;
-        } else if (!user.equals(other.user))
+        } else if (!userId.equals(other.userId))
             return false;
         return true;
     }

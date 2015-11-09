@@ -1,10 +1,6 @@
 package com.epam.reshetnev.spring.core.domain;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Set;
-
-import com.google.common.collect.Sets;
 
 public class User {
 
@@ -16,12 +12,14 @@ public class User {
 
     private LocalDate birthDay;
 
-    private Set<Ticket> bookedTickets = Sets.newHashSet();
+    public User() {
+    }
 
-    private DateTimeFormatter dateFormatter;
-
-    public User(DateTimeFormatter dateFormatter) {
-        this.dateFormatter = dateFormatter;
+    public User(Integer id, String name, String email, LocalDate birthDay) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.birthDay = birthDay;
     }
 
     public Integer getId() {
@@ -56,27 +54,9 @@ public class User {
         this.birthDay = birthDay;
     }
 
-    public Set<Ticket> getBookedTickets() {
-        return bookedTickets;
-    }
-
-    public void setBookedTickets(Set<Ticket> bookedTickets) {
-        this.bookedTickets = bookedTickets;
-    }
-
-    public DateTimeFormatter getDateFormatter() {
-        return dateFormatter;
-    }
-
-    public void setDateFormatter(DateTimeFormatter dateFormatter) {
-        this.dateFormatter = dateFormatter;
-    }
-
     @Override
     public String toString() {
-        return "User [id=" + id + ", name=" + name + ", email=" + email + ", birthDay=" + birthDay.format(dateFormatter)
-//                + ", bookedTickets=" + bookedTickets.stream().map(t -> t.getSeat()).collect(Collectors.toList())
-                + "]";
+        return "User [id=" + id + ", name=" + name + ", email=" + email + ", birthDay=" + birthDay + "]";
     }
 
     @Override
@@ -84,8 +64,6 @@ public class User {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((birthDay == null) ? 0 : birthDay.hashCode());
-        result = prime * result + ((bookedTickets == null) ? 0 : bookedTickets.hashCode());
-        result = prime * result + ((dateFormatter == null) ? 0 : dateFormatter.hashCode());
         result = prime * result + ((email == null) ? 0 : email.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((name == null) ? 0 : name.hashCode());
@@ -105,16 +83,6 @@ public class User {
             if (other.birthDay != null)
                 return false;
         } else if (!birthDay.equals(other.birthDay))
-            return false;
-        if (bookedTickets == null) {
-            if (other.bookedTickets != null)
-                return false;
-        } else if (!bookedTickets.equals(other.bookedTickets))
-            return false;
-        if (dateFormatter == null) {
-            if (other.dateFormatter != null)
-                return false;
-        } else if (!dateFormatter.equals(other.dateFormatter))
             return false;
         if (email == null) {
             if (other.email != null)

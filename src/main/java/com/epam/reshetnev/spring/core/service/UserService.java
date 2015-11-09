@@ -1,21 +1,25 @@
 package com.epam.reshetnev.spring.core.service;
 
+import java.util.List;
+
 import com.epam.reshetnev.spring.core.domain.Ticket;
 import com.epam.reshetnev.spring.core.domain.User;
 
 public interface UserService {
 
-    public User register(User user);
+    public void save(User user);
 
-    public void remove(User user);
+    public void delete(User user);
 
     public User getById(Integer id);
 
-    public User getUserByEmail(String email);
+    public User getByEmail(String email);
 
-    public Iterable<User> getUsersByName(String name);
+    public List<User> getAllByName(String name);
 
-    public Iterable<Ticket> getBookedTickets(User user);
-    
-    public Iterable<User> getAllUsers();
+    public List<Ticket> getBookedTickets(User user);
+
+    public List<User> getAll();
+
+    public void update(User user);
 }

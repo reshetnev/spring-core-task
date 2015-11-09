@@ -1,72 +1,88 @@
 package com.epam.reshetnev.spring.core.service.impl;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.epam.reshetnev.spring.core.dao.EventDao;
-import com.epam.reshetnev.spring.core.domain.Auditorium;
 import com.epam.reshetnev.spring.core.domain.Event;
 import com.epam.reshetnev.spring.core.service.EventService;
-import com.google.common.collect.Lists;
+import com.google.common.base.Preconditions;
 
 @Service
 public class EventServiceImpl implements EventService {
 
+    private static final Logger log = Logger.getLogger(EventServiceImpl.class);
+
     @Autowired
     private EventDao eventDao;
-    
+
     @Override
-    public Event create(Event event) {
-        return eventDao.save(event);
+    public void save(Event event) {
+        eventDao.save(event);
     }
 
     @Override
-    public void remove(Event event) {
+    public void delete(Event event) {
         eventDao.delete(event);
     }
 
     @Override
-    public Event getByName(String name) {
-        Event eventByName = null;
+    public Event getById(Integer id) {
+        return eventDao.getById(id);
+    }
 
-        for (Event event : getAll()) {
-            if (event.getName().equals(name)) {
-                eventByName = event;
-            }
+    @Override
+    public Event getByName(String name) {
+        Optional<Event> event = getAll()
+                .stream()
+                .filter(e -> e.getName().equals(name))
+                .findFirst();
+
+        if (!event.isPresent()) {
+            log.info("Event is not found with (name): " + name);
+            return null;
         }
 
-        return eventByName;
+        return event.get();
     }
 
     @Override
     public List<Event> getAll() {
-        return Lists.newArrayList(eventDao.getAllEvents());
+        return eventDao.getAll();
     }
 
     @Override
-    public List<Event> getForDateRange(LocalDate from, LocalDate to) {
-        List<Event> events = Lists.newArrayList(getAll())
+    public List<Event> getAllForDateRange(LocalDate from, LocalDate to) {
+        return getAll()
                 .stream()
-                .filter(e -> (e.getAirDateTime().toLocalDate().compareTo(from) >= 0) &&
-                    (e.getAirDateTime().toLocalDate().compareTo(to) <= 0))
+                .filter(e -> ((e.getDate().compareTo(from) >= 0)
+                        && (e.getDate().compareTo(to) <= 0)))
                 .collect(Collectors.toList());
-        return events;
     }
 
     @Override
-    public List<Event> getNextEvents(LocalDate to) {
-        return getForDateRange(LocalDate.now(), to);
+    public List<Event> getAllNextEvents(LocalDate to) {
+        return getAllForDateRange(LocalDate.now(), to);
     }
 
     @Override
-    public void assignAuditorium(Event event, Auditorium auditorium, LocalDateTime airDateTime) {
+    public void assignAuditorium(Event event, String auditorium, String date, String time) {
         event.setAuditorium(auditorium);
-        event.setAirDateTime(airDateTime);
+        event.setDate(LocalDate.parse(date));
+        event.setTime(LocalTime.parse(time));
+    }
+
+    @Override
+    public void update(Event event) {
+        Preconditions.checkNotNull(event.getId(), "Event id should not be null");
+        eventDao.update(event);
     }
 
 }

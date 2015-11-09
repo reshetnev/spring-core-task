@@ -12,50 +12,35 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-4.2.xsd
         http://www.springframework.org/schema/aop
-        http://www.springframework.org/schema/aop/spring-aop-4.2.xsd"
->
+        http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+        ">
 
-    <import resource="users.xml"/>
     <import resource="auditoriums.xml"/>
     <import resource="discounts.xml"/>
+    <import resource="db.xml"/>
 
     <context:annotation-config/>
     <context:component-scan base-package="com.epam.reshetnev.spring.core.dao.impl"/>
     <context:component-scan base-package="com.epam.reshetnev.spring.core.service.impl"/>
     <context:component-scan base-package="com.epam.reshetnev.spring.core.discount.impl"/>
+    <context:component-scan base-package="com.epam.reshetnev.spring.core.aspect"/>
 
     <aop:aspectj-autoproxy />
 
-    <bean id="counterAspect" class="com.epam.reshetnev.spring.core.aspect.CounterAspect"/>
-    <bean id="discountAspect" class="com.epam.reshetnev.spring.core.aspect.DiscountAspect"/>
+    <bean id="user" class="com.epam.reshetnev.spring.core.domain.User" scope="prototype"/>
 
     <bean id="event" class="com.epam.reshetnev.spring.core.domain.Event" scope="prototype"/>
 
     <bean id="ticket" class="com.epam.reshetnev.spring.core.domain.Ticket" scope="prototype"/>
 
-    <bean id="dateTimeFormatter" class="java.time.format.DateTimeFormatter" factory-method="ofPattern">
-        <constructor-arg value="dd.MM.yyyy HH.mm"/>
-    </bean>
-
-    <bean id="dateFormatter" class="java.time.format.DateTimeFormatter" factory-method="ofPattern">
-        <constructor-arg value="dd.MM.yyyy"/>
-    </bean>
-
-    <bean id="timeFormatter" class="java.time.format.DateTimeFormatter" factory-method="ofPattern">
-        <constructor-arg value="HH.mm"/>
-    </bean>
-
     <bean id="app" class="com.epam.reshetnev.spring.core.App"/>
-
-    <!-- creates a java.util.Properties instance with values loaded from the supplied location -->
-    <util:properties id="usersProps" location="classpath:users.properties"/>
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>classpath:users.properties</value>
                 <value>classpath:auditoriums.properties</value>
                 <value>classpath:discounts.properties</value>
+                <value>classpath:db.properties</value>
             </list>
         </property>
         <property name="ignoreResourceNotFound" value="true"/>

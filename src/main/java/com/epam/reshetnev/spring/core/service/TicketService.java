@@ -7,10 +7,18 @@ import com.epam.reshetnev.spring.core.domain.Ticket;
 
 public interface TicketService {
 
-    public Ticket register(Ticket ticket);
+    public void save(Ticket ticket);
 
-    public Iterable<Ticket> getAllTickets();
+    public void delete(Ticket ticket);
 
-    public List<Ticket> getByEvent(Event event, List<Integer> seats);
+    public Ticket getById(Integer id);
+
+    public Ticket getByEventAndSeat(Event event, Integer seat);
+
+    public List<Ticket> getAll();
+
+    public List<Ticket> getAllByEventAndSeats(Event event, List<Integer> seats);
+
+    public void update(Ticket ticket);
 
 }

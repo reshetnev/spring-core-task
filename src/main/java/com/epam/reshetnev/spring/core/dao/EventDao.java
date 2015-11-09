@@ -1,15 +1,18 @@
 package com.epam.reshetnev.spring.core.dao;
 
+import java.util.List;
+
 import com.epam.reshetnev.spring.core.domain.Event;
 
 public interface EventDao {
 
-    public Event save(Event event);
+    public void save(Event event);
 
     public void delete(Event event);
 
-    public Event getEventById(Integer name);
+    public Event getById(Integer id);
 
-    public Iterable<Event> getAllEvents();
+    public List<Event> getAll();
 
+    public void update(Event event);
 }
