@@ -1,31 +1,33 @@
 package com.epam.reshetnev.spring.core.aspect;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
 
 import com.epam.reshetnev.spring.core.domain.Event;
 import com.epam.reshetnev.spring.core.domain.User;
+import com.google.common.collect.Maps;
 
+@Component
 @Aspect
 public class DiscountAspect {
 
-    private Map<Class<?>, Integer> counter = new HashMap<Class<?>, Integer>();
+    private Map<String, Integer> counter = Maps.newHashMap();
 
-    private Map<String, Integer> counterBirthDayGetDiscountForUser = new HashMap<String, Integer>();
+    private Map<String, Integer> counterBirthDayGetDiscountForUser = Maps.newHashMap();
 
-    private Map<String, Integer> counterEveryTenGetDiscountForUser = new HashMap<String, Integer>();
+    private Map<String, Integer> counterEveryTenGetDiscountForUser = Maps.newHashMap();
 
-    public Map<Class<?>, Integer> getCounter() {
+    public Map<String, Integer> getCounter() {
         return counter;
     }
 
-    public void setCounter(Map<Class<?>, Integer> counter) {
+    public void setCounter(Map<String, Integer> counter) {
         this.counter = counter;
     }
 
@@ -52,13 +54,13 @@ public class DiscountAspect {
     @AfterReturning("allGetDiscountMethods()")
     public void count(JoinPoint jp) {
 
-        Class<?> clazz = jp.getTarget().getClass();
+        String className = jp.getTarget().getClass().getName();
 
-        if (!counter.containsKey(clazz)) {
-            counter.put(clazz, 0);
+        if (!counter.containsKey(className)) {
+            counter.put(className, 0);
         }
 
-        counter.put(clazz, counter.get(clazz) + 1);
+        counter.put(className, counter.get(className) + 1);
     }
 
     @Pointcut("execution(* com.epam.reshetnev.spring.core.discount.impl.BirthDayStrategy.getDiscount(..))")

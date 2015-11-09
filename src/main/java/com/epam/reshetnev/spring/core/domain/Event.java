@@ -1,9 +1,9 @@
 package com.epam.reshetnev.spring.core.domain;
 
-import java.time.LocalDateTime;
-import java.util.Set;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
-import com.google.common.collect.Sets;
+import com.epam.reshetnev.spring.core.domain.enums.Rating;
 
 public class Event {
 
@@ -11,15 +11,29 @@ public class Event {
 
     private String name;
 
-    private LocalDateTime airDateTime;
+    private LocalDate date;
+
+    private LocalTime time;
 
     private Double basePrice;
 
     private Rating rating;
 
-    private Auditorium auditorium;
+    private String auditorium;
 
-    private Set<Ticket> tickets = Sets.newHashSet();
+    public Event() {
+    }
+
+    public Event(Integer id, String name, LocalDate date, LocalTime time, Double basePrice, Rating rating,
+            String auditorium) {
+        this.id = id;
+        this.name = name;
+        this.date = date;
+        this.time = time;
+        this.basePrice = basePrice;
+        this.rating = rating;
+        this.auditorium = auditorium;
+    }
 
     public Integer getId() {
         return id;
@@ -37,12 +51,20 @@ public class Event {
         this.name = name;
     }
 
-    public LocalDateTime getAirDateTime() {
-        return airDateTime;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setAirDateTime(LocalDateTime airDateTime) {
-        this.airDateTime = airDateTime;
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public LocalTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalTime time) {
+        this.time = time;
     }
 
     public Double getBasePrice() {
@@ -61,41 +83,31 @@ public class Event {
         this.rating = rating;
     }
 
-    public Auditorium getAuditorium() {
+    public String getAuditorium() {
         return auditorium;
     }
 
-    public void setAuditorium(Auditorium auditorium) {
+    public void setAuditorium(String auditorium) {
         this.auditorium = auditorium;
-    }
-
-    public Set<Ticket> getTickets() {
-        return tickets;
-    }
-
-    public void setTickets(Set<Ticket> tickets) {
-        this.tickets = tickets;
     }
 
     @Override
     public String toString() {
-        return "Event [id=" + id + ", name=" + name + ", airDateTime=" + airDateTime + ", basePrice=" + basePrice
-                + ", rating=" + rating + ", auditorium=" + auditorium
-//                + ", tickets=" + tickets.stream().map(t -> t.getSeat()).collect(Collectors.toList());
-                + "]";
+        return "Event [id=" + id + ", name=" + name + ", date=" + date + ", time=" + time + ", basePrice=" + basePrice
+                + ", rating=" + rating + ", auditorium=" + auditorium + "]";
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((airDateTime == null) ? 0 : airDateTime.hashCode());
         result = prime * result + ((auditorium == null) ? 0 : auditorium.hashCode());
         result = prime * result + ((basePrice == null) ? 0 : basePrice.hashCode());
+        result = prime * result + ((date == null) ? 0 : date.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         result = prime * result + ((rating == null) ? 0 : rating.hashCode());
-        result = prime * result + ((tickets == null) ? 0 : tickets.hashCode());
+        result = prime * result + ((time == null) ? 0 : time.hashCode());
         return result;
     }
 
@@ -108,11 +120,6 @@ public class Event {
         if (getClass() != obj.getClass())
             return false;
         Event other = (Event) obj;
-        if (airDateTime == null) {
-            if (other.airDateTime != null)
-                return false;
-        } else if (!airDateTime.equals(other.airDateTime))
-            return false;
         if (auditorium == null) {
             if (other.auditorium != null)
                 return false;
@@ -122,6 +129,11 @@ public class Event {
             if (other.basePrice != null)
                 return false;
         } else if (!basePrice.equals(other.basePrice))
+            return false;
+        if (date == null) {
+            if (other.date != null)
+                return false;
+        } else if (!date.equals(other.date))
             return false;
         if (id == null) {
             if (other.id != null)
@@ -135,10 +147,10 @@ public class Event {
             return false;
         if (rating != other.rating)
             return false;
-        if (tickets == null) {
-            if (other.tickets != null)
+        if (time == null) {
+            if (other.time != null)
                 return false;
-        } else if (!tickets.equals(other.tickets))
+        } else if (!time.equals(other.time))
             return false;
         return true;
     }

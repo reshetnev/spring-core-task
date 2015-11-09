@@ -6,11 +6,11 @@ import com.epam.reshetnev.spring.core.domain.Auditorium;
 
 public interface AuditoriumService {
 
-    public List<Auditorium> getAuditoriums();
+    public List<Auditorium> getAll();
 
     public Integer getSeatsNumber(Auditorium auditorium);
 
     public List<Integer> getVipSeats(Auditorium auditorium);
 
-    public Auditorium getAuditoriumByName(String name);
+    public Auditorium getByName(String name);
 }

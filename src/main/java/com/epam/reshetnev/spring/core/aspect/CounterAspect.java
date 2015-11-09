@@ -1,7 +1,6 @@
 package com.epam.reshetnev.spring.core.aspect;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -9,19 +8,22 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
 
 import com.epam.reshetnev.spring.core.domain.Event;
 import com.epam.reshetnev.spring.core.domain.Ticket;
 import com.epam.reshetnev.spring.core.domain.User;
+import com.google.common.collect.Maps;
 
+@Component
 @Aspect
 public class CounterAspect {
 
-    private Map<String, Integer> counterGetEventByName = new HashMap<String, Integer>();
+    private Map<String, Integer> counterGetEventByName = Maps.newHashMap();
 
-    private Map<String, Integer> counterGetTicketPrices = new HashMap<String, Integer>();
+    private Map<String, Integer> counterGetTicketPrices = Maps.newHashMap();
 
-    private Map<String, Integer> counterBookTicket = new HashMap<String, Integer>();
+    private Map<Integer, Integer> counterBookTicket = Maps.newHashMap();
 
     public Map<String, Integer> getCounterGetEventByName() {
         return counterGetEventByName;
@@ -39,11 +41,11 @@ public class CounterAspect {
         this.counterGetTicketPrices = counterGetTicketPrices;
     }
 
-    public Map<String, Integer> getCounterBookTicket() {
+    public Map<Integer, Integer> getCounterBookTicket() {
         return counterBookTicket;
     }
 
-    public void setCounterBookTicket(Map<String, Integer> counterBookTicket) {
+    public void setCounterBookTicket(Map<Integer, Integer> counterBookTicket) {
         this.counterBookTicket = counterBookTicket;
     }
 
@@ -65,8 +67,8 @@ public class CounterAspect {
     private void bookingServiceGetTicketPricesMethod() {
     }
 
-    @AfterReturning("bookingServiceGetTicketPricesMethod() && args(event, airDateTime, seats, user)")
-    public void countGetTicketPrices(JoinPoint jp, Event event, LocalDateTime airDateTime, List<Integer> seats, User user) {
+    @AfterReturning("bookingServiceGetTicketPricesMethod() && args(event, date, seats, user)")
+    public void countGetTicketPrices(JoinPoint jp, Event event, LocalDate date, List<Integer> seats, User user) {
         String eventName = event.getName();
 
         if (!counterGetTicketPrices.containsKey(eventName)) {
@@ -82,12 +84,13 @@ public class CounterAspect {
 
     @AfterReturning("bookingServiceBookTicketMethod() && args(user, ticket)")
     public void countBookTicket(JoinPoint jp, User user, Ticket ticket) {
-        String eventName = ticket.getEvent().getName();
+        Integer eventId = ticket.getEventId();
 
-        if (!counterBookTicket.containsKey(eventName)) {
-            counterBookTicket.put(eventName, 0);
+        if (!counterBookTicket.containsKey(eventId)) {
+            counterBookTicket.put(eventId, 0);
         }
 
-        counterBookTicket.put(eventName, counterBookTicket.get(eventName)+1);
+        counterBookTicket.put(eventId, counterBookTicket.get(eventId)+1);
     }
+
 }
