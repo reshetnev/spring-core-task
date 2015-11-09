@@ -3,6 +3,7 @@ package com.epam.reshetnev.spring.core;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.epam.reshetnev.spring.core.aspect.CounterAspect;
 import com.epam.reshetnev.spring.core.aspect.DiscountAspect;
+import com.epam.reshetnev.spring.core.aspect.LuckyWinnerAspect;
 import com.epam.reshetnev.spring.core.domain.Counter;
 import com.epam.reshetnev.spring.core.domain.Event;
 import com.epam.reshetnev.spring.core.domain.Ticket;
@@ -52,6 +54,9 @@ public class App {
 
     @Autowired
     private DiscountAspect discountAspect;
+
+    @Autowired
+    private LuckyWinnerAspect luckyWinnerAspect;
 
     public static void main(String[] args) {
 
@@ -180,6 +185,9 @@ public class App {
         app.createDiscountAspect();
         log.info("Counters of DiscountAspect has been saved in DB");
 
+        app.createLuckyWinnerAspect();
+        log.info("Counters of LuckyWinnerAspect has been saved in DB");
+
         log.info("All Auditoriums:");
         app.printAllAuditoriums();
 
@@ -256,7 +264,15 @@ public class App {
     private void bookTickets(User user, List<Ticket> tickets) {
         for (Ticket ticket : tickets) {
             bookTicket(user, ticket);
+            if ( (user.getId() != null) && checkLucky()) {
+                bookingService.setTicketPriceToZero(user, ticket);
+            }
         }
+    }
+
+    private boolean checkLucky() {
+        Random rnd = new Random();
+        return rnd.nextBoolean();
     }
 
     private void bookTicket(User user, Ticket ticket) {
@@ -271,7 +287,7 @@ public class App {
         Event event = eventService.getByName(eventName);
         return bookingService.getTicketsForEvent(event);
     }
-    
+
     private Event getEventByName(String name) {
         return eventService.getByName(name);
     }
@@ -307,6 +323,7 @@ public class App {
         createCounter(CounterType.GET_TICKET_PRICES, counterGetTicketPrices);
 
         createCounterBookTicket(counterBookTicket);
+
     }
 
     private void createDiscountAspect() {
@@ -322,6 +339,12 @@ public class App {
         createCounter(CounterType.DISCOUNT_BIRTH_DAY, counterBirthDayGetDiscountForUser);
 
         createCounter(CounterType.DISCOUNT_EVERY_TEN, counterEveryTenGetDiscountForUser);
+    }
+
+    private void createLuckyWinnerAspect() {
+        Map<String, Integer> counterLuckyWinner = luckyWinnerAspect.getCounterLuckyWinner();
+
+        createCounter(CounterType.LUCKY_WINNER, counterLuckyWinner);
     }
 
     private void createTickets(ConfigurableApplicationContext ctx, Event event, List<Integer> seats) {

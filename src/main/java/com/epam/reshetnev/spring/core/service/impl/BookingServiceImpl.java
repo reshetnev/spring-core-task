@@ -88,4 +88,9 @@ public class BookingServiceImpl implements BookingService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void setTicketPriceToZero(User user, Ticket ticket) {
+        log.info("PRICE SET TO ZERO for " + ticket + " for " + user);
+    }
+
 }

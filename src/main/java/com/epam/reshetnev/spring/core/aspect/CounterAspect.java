@@ -84,12 +84,13 @@ public class CounterAspect {
 
     @AfterReturning("bookingServiceBookTicketMethod() && args(user, ticket)")
     public void countBookTicket(JoinPoint jp, User user, Ticket ticket) {
-        Integer eventName = ticket.getEventId();
+        Integer eventId = ticket.getEventId();
 
-        if (!counterBookTicket.containsKey(eventName)) {
-            counterBookTicket.put(eventName, 0);
+        if (!counterBookTicket.containsKey(eventId)) {
+            counterBookTicket.put(eventId, 0);
         }
 
-        counterBookTicket.put(eventName, counterBookTicket.get(eventName)+1);
+        counterBookTicket.put(eventId, counterBookTicket.get(eventId)+1);
     }
+
 }

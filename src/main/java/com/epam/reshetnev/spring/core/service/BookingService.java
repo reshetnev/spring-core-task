@@ -15,4 +15,5 @@ public interface BookingService {
 
     public List<Ticket> getTicketsForEvent(Event event);
 
+    public void setTicketPriceToZero(User user, Ticket ticket);
 }

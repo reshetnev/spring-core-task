@@ -7,5 +7,6 @@ public enum CounterType {
     BOOK_TICKET,
     DISCOUNT_TOTAL,
     DISCOUNT_BIRTH_DAY,
-    DISCOUNT_EVERY_TEN;
+    DISCOUNT_EVERY_TEN,
+    LUCKY_WINNER;
 }
